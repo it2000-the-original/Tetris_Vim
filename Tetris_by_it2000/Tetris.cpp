@@ -1,11 +1,13 @@
 #include "Tetris.hpp"
 #include "Matrix.hpp"
 #include "Piece.hpp"
+#include "Nexts.hpp"
 
 RenderWindow Tetris::window;
 Matrix Tetris::matrix;
 Sprite Tetris::blocks;
 Piece Tetris::piece;
+Nexts Tetris::nexts;
 Event Tetris::event;
 
 Tetris::Tetris() {}
@@ -34,7 +36,10 @@ void Tetris::init(const int FPS, std::string title) {
 	matrix.init();
 
 	srand(time(NULL));
-	piece.set();
+
+	nexts.init();
+
+	piece.set(nexts.get());
 
 	std::cout << "Window has been created" << std::endl;
 
@@ -53,6 +58,7 @@ void Tetris::update() {
 	}
 
 	matrix.check();
+	nexts.update();
 }
 
 void Tetris::echeck() {
@@ -108,6 +114,7 @@ void Tetris::render() {
 	window.draw(background);
 	matrix.draw();
 	piece.draw();
+	nexts.draw();
 
 	window.display();
 }
@@ -158,7 +165,7 @@ void Tetris::moveLeft() {
 
 void Tetris::moveDown() {
 
-	if (dclock.getElapsedTime() > dTime) {
+	if (dclock.getElapsedTime() > dTime and piece.check(0, 1)) {
 		piece.move(0, 1);
 		dclock.restart();
 		sclock.restart();
@@ -194,7 +201,8 @@ void Tetris::step() {
 	if (!piece.check(0, 1)) {
 
 		piece.depose();
-		piece.set();
+		nexts.generate();
+		piece.set(nexts.get());
 
 		// Game over
 

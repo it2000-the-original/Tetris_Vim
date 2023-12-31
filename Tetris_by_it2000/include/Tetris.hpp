@@ -4,6 +4,7 @@
 
 class Matrix;
 class Piece;
+class Nexts;
 
 using namespace sf;
 
@@ -66,6 +67,7 @@ public:
 	static Matrix matrix;
 	static Sprite blocks;
 	static Piece piece;
+	static Nexts nexts;
 	static Event event;
 
 	Tetris();

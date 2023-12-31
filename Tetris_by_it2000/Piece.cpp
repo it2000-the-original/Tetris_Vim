@@ -2,9 +2,9 @@
 #include "Matrix.hpp"
 #include "Tetris.hpp"
 
-void Piece::set() {
+void Piece::set(int p) {
 
-	piece = rand() % 7;
+	piece = p;
 
 	x = (Tetris::matrix.matrix.size() - 4) / 2;
 	y = 0;
