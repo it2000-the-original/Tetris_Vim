@@ -1,5 +1,6 @@
 #include "Matrix.hpp"
 #include "Tetris.hpp"
+#include "Status.hpp"
 
 void Matrix::init() {
 
@@ -60,4 +61,6 @@ void Matrix::del(int l) {
 
 		matrix[i][j + 1] = matrix[i][j];
 	}
+
+	Tetris::status.lines++;
 }

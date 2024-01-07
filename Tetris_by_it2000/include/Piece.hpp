@@ -1,7 +1,5 @@
 #include <array>
 
-using namespace std;
-
 struct Block {
 	int x;
 	int y;
@@ -25,22 +23,25 @@ private:
 
 	int piece;
 
-	array<Block, 4> blocks;
+	std::array<Block, 4> blocks;
 
 public:
 
 	void set(int p);
 
-	void move(int _x, int _y);
-	void rotate();
+	bool move(int _x, int _y);
+	bool rotate();
 	void fall();
 
 	// Check if the piece is in a correct position
-	bool check(array<Block, 4> _blocks, int _x, int _y);
-	bool check(array<Block, 4> _blocks);
+	bool check(std::array<Block, 4> _blocks, int _x, int _y);
+	bool check(std::array<Block, 4> _blocks);
 	bool check(int _x, int _y);
 
 	void depose(); // Put the piece inside the matrix
 
 	void draw();
+
+	std::array<Block, 4> getBlocks();
+	int getPiece();
 };

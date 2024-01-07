@@ -1,9 +1,13 @@
+#include "Preview.hpp"
 #include "Tetris.hpp"
 #include "Matrix.hpp"
+#include "Status.hpp"
 #include "Piece.hpp"
 #include "Nexts.hpp"
 
 RenderWindow Tetris::window;
+Preview Tetris::preview;
+Status Tetris::status;
 Matrix Tetris::matrix;
 Sprite Tetris::blocks;
 Piece Tetris::piece;
@@ -32,23 +36,29 @@ void Tetris::init(const int FPS, std::string title) {
 
 	background.setTexture(*wTexture);
 	blocks.setTexture(*bTexture);
+	piece.set(nexts.get());
+	sTime = seconds(0.5f);
 
 	matrix.init();
-
-	srand(time(NULL));
-
+	status.init();
 	nexts.init();
 
-	piece.set(nexts.get());
-
 	std::cout << "Window has been created" << std::endl;
-
-	piece.move(0, 1);
 }
 
 void Tetris::update() {
 
 	icheck();
+
+	if (last) {
+
+		if (fclock.getElapsedTime() < fTime) {
+			if (rotated or rmoved or lmoved)
+				sclock.restart();
+		}
+		
+		else jumpStep = true;
+	}
 
 	if (sclock.getElapsedTime() > sTime or jumpStep) {
 
@@ -57,8 +67,11 @@ void Tetris::update() {
 		jumpStep = false;
 	}
 
+	checkLast();
 	matrix.check();
 	nexts.update();
+	status.update();
+	preview.update();
 }
 
 void Tetris::echeck() {
@@ -76,35 +89,29 @@ void Tetris::echeck() {
 
 void Tetris::icheck() {
 
-	// Rotate commands
+	rmoving = false;
+	lmoving = false;
+	rotating = false;
+	falling = false;
 
 	if (Keyboard::isKeyPressed(Keyboard::Up) or 
 		Keyboard::isKeyPressed(Keyboard::K)) rotate();
-	
-	else rotated = false;
-
-	// Fall commands
 
 	if (Keyboard::isKeyPressed(Keyboard::Space)) fall(); 
-	
-	else fallen = false;
 
-	// Move <- -> commands
-	
 	if (Keyboard::isKeyPressed(Keyboard::Right) or 
 		Keyboard::isKeyPressed(Keyboard::L)) moveRight(); 
-	
-	else rmoved = false;
 
 	if (Keyboard::isKeyPressed(Keyboard::Left) or 
 		Keyboard::isKeyPressed(Keyboard::H)) moveLeft();
-	
-	else lmoved = false;
-
-	// Move down commands
 
 	if (Keyboard::isKeyPressed(Keyboard::Down) or
 		Keyboard::isKeyPressed(Keyboard::J)) moveDown();
+
+	if (!rmoving) rmoved = false;
+	if (!lmoving) lmoved = false;
+	if (!rotating) rotated = false;
+	if (!falling) fallen = false;	
 }
 
 void Tetris::render() {
@@ -113,54 +120,48 @@ void Tetris::render() {
 
 	window.draw(background);
 	matrix.draw();
+	preview.draw();
 	piece.draw();
 	nexts.draw();
+	status.draw();
 
 	window.display();
 }
 
 void Tetris::moveRight() {
 
-	if (!lmoved and (!rmoved or prclock.getElapsedTime() >= prTime)) {
+	if (!lmoved and (!rmoved or prclock.getElapsedTime() >= prTime) and piece.check(1, 0)) {
 
 		if (!rmoved or rclock.getElapsedTime() >= rTime) {
 
 			piece.move(1, 0);
 			rclock.restart();
-			moves++;
-
-			if (!piece.check(0, 1) and moves <= 15) {
-
-				sclock.restart();
-			}
 		}
 
 		if (!rmoved) prclock.restart();
 
 		rmoved = true;
 	}
+
+	rmoving = true;
 }
 
 void Tetris::moveLeft() {
 
-	if (!rmoved and (!lmoved or plclock.getElapsedTime() >= plTime)) {
+	if (!rmoved and (!lmoved or plclock.getElapsedTime() >= plTime) and piece.check(-1, 0)) {
 
 		if (!lmoved or lclock.getElapsedTime() >= lTime) {
 
 			piece.move(-1, 0);
 			lclock.restart();
-			moves++;
-
-			if (!piece.check(0, 1) and moves <= 15) {
-
-				sclock.restart();
-			}
 		}
 
 		if (!lmoved) plclock.restart();
 
 		lmoved = true;
 	}
+
+	lmoving = true;
 }
 
 void Tetris::moveDown() {
@@ -176,15 +177,11 @@ void Tetris::rotate() {
 
 	if (!rotated) {
 
-		piece.rotate();
-		rotated = true;
-		moves++;
-
-		if (!piece.check(0, 1) and moves <= 15) {
-
-			sclock.restart();
-		}
+		if (piece.rotate()) 
+			rotated = true;
 	}
+
+	rotating = true;
 }
 
 void Tetris::fall() {
@@ -194,6 +191,8 @@ void Tetris::fall() {
 		fallen = true;
 		jumpStep = true;
 	}
+
+	falling = true;
 }
 
 void Tetris::step() {
@@ -206,19 +205,42 @@ void Tetris::step() {
 
 		// Game over
 
-		if (!piece.check(0, 0)) {
-
-			window.close();
-		}
+		if (!piece.check(0, 0)) restart();
 	}
 
 	else {
+
 		piece.move(0, 1);
-		moves = 0;
 	}
 }
 
 bool Tetris::isRunning() {
 
 	return window.isOpen();
+}
+
+void Tetris::checkLast() {
+
+	if (!piece.check(0, 1) and !lasted) {
+
+		fclock.restart();
+		last = true;
+		lasted = true;
+	}
+
+	else if (piece.check(0, 3)) {
+		last = false;
+		lasted = false;
+	}
+}
+
+void Tetris::restart() {
+
+	matrix.init();
+	nexts.init();
+	piece.set(nexts.get());
+	sclock.restart();
+
+
+	sTime = seconds(0.5f);
 }

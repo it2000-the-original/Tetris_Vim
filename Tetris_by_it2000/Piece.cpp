@@ -2,6 +2,8 @@
 #include "Matrix.hpp"
 #include "Tetris.hpp"
 
+using namespace std;
+
 void Piece::set(int p) {
 
 	piece = p;
@@ -16,10 +18,10 @@ void Piece::set(int p) {
 	}
 }
 
-void Piece::move(int _x, int _y) {
+bool Piece::move(int _x, int _y) {
 
 	if (check(_x, _y)) {
-		
+
 		for (auto& block : blocks) {
 
 			block.x += _x;
@@ -28,10 +30,14 @@ void Piece::move(int _x, int _y) {
 
 		x += _x;
 		y += _y;
+
+		return true;
 	}
+
+	return false;
 }
 
-void Piece::rotate() {
+bool Piece::rotate() {
 	
 	if (piece != 3) {
 
@@ -51,9 +57,9 @@ void Piece::rotate() {
 			block.y = _y;
 		}
 
-		std::vector<Block> corrections = { 
-			{0, 0}, {1, 0}, {-1, 0}, {2, 0}, 
-			{-2, 0}, {0, -1}, {0, -2} 
+		vector<Block> corrections = { 
+			{0, 0}, {1, 0}, {-1, 0}, {0, -1}, 
+			{2, 0}, {-2, 0}, {0, -2} 
 		};
 
 		for (auto c : corrections) {
@@ -62,10 +68,12 @@ void Piece::rotate() {
 				
 				blocks = _blocks;
 				move(c.x, c.y);
-				break;
+				return true;
 			}
 		}
 	}
+
+	return false;
 }
 
 void Piece::fall() {
@@ -151,4 +159,14 @@ void Piece::draw() {
 
 		Tetris::window.draw(Tetris::blocks);
 	}
+}
+
+array<Block, 4> Piece::getBlocks() {
+
+	return blocks;
+}
+
+int Piece::getPiece() {
+
+	return piece;
 }

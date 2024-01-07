@@ -9,6 +9,8 @@ int main()
 
 	Tetris tetris;
 
+	srand(time(NULL));
+
 	tetris.init(FPS, title);
 
 	while (tetris.isRunning()) {
