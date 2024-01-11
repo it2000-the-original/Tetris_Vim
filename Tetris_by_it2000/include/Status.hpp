@@ -7,9 +7,9 @@ class Status {
 
 private:
 
-	const int CX = 459;
-	const int CY = 416;
-	const int CS = 96;
+	const int CX = 459; // Status panel x position
+	const int CY = 416; // Status panel y position 
+	const int CS = 96;  // Size of a single box in the panel
 
 	const int TPADDING = 20;
 	const int NPADDING = 55;
@@ -28,7 +28,7 @@ private:
 public:
 
 	int score = 0;
-	int level = 0;
+	int level = 1;
 	int lines = 0;
 
 	void init();

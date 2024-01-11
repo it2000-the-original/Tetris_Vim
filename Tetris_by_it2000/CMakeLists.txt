@@ -1,7 +1,7 @@
 ﻿# Adding sfml packages...
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 
-add_executable (Tetris "Main.cpp"  "Tetris.cpp" "Matrix.cpp" "Piece.cpp" "Nexts.cpp" "include/Preview.hpp" "Preview.cpp" "Status.cpp")
+add_executable (Tetris "Main.cpp" "Tetris.cpp" "Matrix.cpp" "Piece.cpp" "Preview.cpp" "Ghost.cpp" "Status.cpp" "include/Generator.hpp" "Generator.cpp")
 
 # Linking sfml libraries
 target_link_libraries(Tetris PRIVATE "sfml-system" "sfml-graphics" "sfml-window")

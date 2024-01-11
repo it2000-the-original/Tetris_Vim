@@ -1,17 +1,17 @@
-#include "Preview.hpp"
 #include "Tetris.hpp"
 #include "Matrix.hpp"
 #include "Status.hpp"
+#include "Ghost.hpp"
 #include "Piece.hpp"
-#include "Nexts.hpp"
+#include "Preview.hpp"
 
 RenderWindow Tetris::window;
-Preview Tetris::preview;
 Status Tetris::status;
 Matrix Tetris::matrix;
 Sprite Tetris::blocks;
+Ghost Tetris::ghost;
 Piece Tetris::piece;
-Nexts Tetris::nexts;
+Preview Tetris::preview;
 Event Tetris::event;
 
 Tetris::Tetris() {}
@@ -36,12 +36,12 @@ void Tetris::init(const int FPS, std::string title) {
 
 	background.setTexture(*wTexture);
 	blocks.setTexture(*bTexture);
-	piece.set(nexts.get());
+	piece.set(5);
 	sTime = seconds(0.5f);
 
 	matrix.init();
 	status.init();
-	nexts.init();
+	preview.init();
 
 	std::cout << "Window has been created" << std::endl;
 }
@@ -68,10 +68,9 @@ void Tetris::update() {
 	}
 
 	checkLast();
-	matrix.check();
-	nexts.update();
-	status.update();
+	ghost.update();
 	preview.update();
+	status.update();
 }
 
 void Tetris::echeck() {
@@ -120,9 +119,9 @@ void Tetris::render() {
 
 	window.draw(background);
 	matrix.draw();
-	preview.draw();
+	ghost.draw();
 	piece.draw();
-	nexts.draw();
+	preview.draw();
 	status.draw();
 
 	window.display();
@@ -167,6 +166,7 @@ void Tetris::moveLeft() {
 void Tetris::moveDown() {
 
 	if (dclock.getElapsedTime() > dTime and piece.check(0, 1)) {
+		status.score++;
 		piece.move(0, 1);
 		dclock.restart();
 		sclock.restart();
@@ -187,7 +187,7 @@ void Tetris::rotate() {
 void Tetris::fall() {
 
 	if (!fallen) {
-		piece.fall();
+		status.score += piece.fall() * 2;
 		fallen = true;
 		jumpStep = true;
 	}
@@ -200,11 +200,11 @@ void Tetris::step() {
 	if (!piece.check(0, 1)) {
 
 		piece.depose();
-		nexts.generate();
-		piece.set(nexts.get());
+		matrix.check();
+		preview.generate();
+		piece.set(preview.get());
 
 		// Game over
-
 		if (!piece.check(0, 0)) restart();
 	}
 
@@ -237,8 +237,8 @@ void Tetris::checkLast() {
 void Tetris::restart() {
 
 	matrix.init();
-	nexts.init();
-	piece.set(nexts.get());
+	preview.init();
+	piece.set(preview.get());
 	sclock.restart();
 
 

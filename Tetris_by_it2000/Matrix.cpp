@@ -4,6 +4,8 @@
 
 void Matrix::init() {
 
+	comboCount = -1;
+
 	for (auto& column : matrix)
 	for (auto& box : column) {
 
@@ -32,6 +34,8 @@ void Matrix::draw() {
 
 void Matrix::check() {
 
+	int removedLines = 0;
+
 	for (int i = 0; i < H; i++) {
 
 		bool full = true;
@@ -46,10 +50,14 @@ void Matrix::check() {
 		}
 
 		if (full) {
+			removedLines++;
 			del(i);
 			i--;
 		}
 	}
+
+	checkLinesScore(removedLines);
+	checkComboScore(removedLines);
 }
 
 void Matrix::del(int l) {
@@ -63,4 +71,25 @@ void Matrix::del(int l) {
 	}
 
 	Tetris::status.lines++;
+}
+
+void Matrix::checkLinesScore(int rLines) {
+
+	switch (rLines) {
+	case 1: Tetris::status.score += SINGLE * Tetris::status.level; break;
+	case 2: Tetris::status.score += DOUBLE * Tetris::status.level; break;
+	case 3: Tetris::status.score += TRIPLE * Tetris::status.level; break;
+	case 4: Tetris::status.score += TETRIS * Tetris::status.level; break;
+	}
+}
+
+void Matrix::checkComboScore(int rLines) {
+
+	if (rLines > 0) {
+
+		comboCount++;
+		Tetris::status.score += COMBO * comboCount * Tetris::status.level;
+	}
+
+	else comboCount = -1;
 }

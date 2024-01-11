@@ -15,6 +15,24 @@ const int pieces[7][4] = {
 	0, 1, 5, 6  // Z
 };
 
+const std::array<std::array<Block, 5>, 4> WKTests {{
+
+	// Wall Kicks tests for: J L S T Z
+	{{{0, 0}, {-1, 0}, {-1, -1}, {0,  2}, {-1,  2}}},
+	{{{0, 0}, { 1, 0}, { 1,  1}, {0, -2}, { 1, -2}}},
+	{{{0, 0}, { 1, 0}, { 1, -1}, {0,  2}, { 1,  2}}},
+	{{{0, 0}, {-1, 0}, {-1,  1}, {0, -2}, {-1, -2}}},
+}};
+
+const std::array<std::array<Block, 5>, 4> IWKTests {{
+
+	// Wall Kicks tests for: I
+	{{{0, 0}, {-2, 0}, { 1, 0}, {-2,  1}, { 1, -2}}},
+	{{{0, 0}, {-1, 0}, { 2, 0}, {-1, -2}, { 2,  1}}},
+	{{{0, 0}, { 2, 0}, {-1, 0}, { 2, -1}, {-1,  2}}},
+	{{{0, 0}, { 1, 0}, {-2, 0}, { 1,  2}, {-1 - 2}}},
+}};
+
 class Piece {
 
 private:
@@ -22,6 +40,7 @@ private:
 	int x, y;
 
 	int piece;
+	int rstatus = 0;
 
 	std::array<Block, 4> blocks;
 
@@ -31,7 +50,7 @@ public:
 
 	bool move(int _x, int _y);
 	bool rotate();
-	void fall();
+	int fall();
 
 	// Check if the piece is in a correct position
 	bool check(std::array<Block, 4> _blocks, int _x, int _y);
@@ -42,6 +61,7 @@ public:
 
 	void draw();
 
+	bool wkicks(std::array<Block, 4> _blocks);
 	std::array<Block, 4> getBlocks();
 	int getPiece();
 };

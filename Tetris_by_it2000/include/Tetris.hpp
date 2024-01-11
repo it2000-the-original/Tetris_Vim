@@ -5,8 +5,8 @@
 class Preview;
 class Status;
 class Matrix;
+class Ghost;
 class Piece;
-class Nexts;
 
 using namespace sf;
 
@@ -75,8 +75,8 @@ public:
 	static Status status;
 	static Matrix matrix;
 	static Sprite blocks;
+	static Ghost ghost;
 	static Piece piece;
-	static Nexts nexts;
 	static Event event;
 
 	Tetris();

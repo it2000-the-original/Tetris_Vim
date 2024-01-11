@@ -7,6 +7,7 @@ using namespace std;
 void Piece::set(int p) {
 
 	piece = p;
+	rstatus = 0;
 
 	x = (Tetris::matrix.matrix.size() - 4) / 2;
 	y = 0;
@@ -41,13 +42,12 @@ bool Piece::rotate() {
 	
 	if (piece != 3) {
 
-		int size;
-
-		array<Block, 4> _blocks = blocks;
+		int size; // Size of the piece in blocks
 
 		if (piece != 0) size = 2;
-
 		else size = 3;
+
+		array<Block, 4> _blocks = blocks;
 
 		for (auto& block : _blocks) {
 
@@ -57,31 +57,23 @@ bool Piece::rotate() {
 			block.y = _y;
 		}
 
-		vector<Block> corrections = { 
-			{0, 0}, {1, 0}, {-1, 0}, {0, -1}, 
-			{2, 0}, {-2, 0}, {0, -2} 
-		};
-
-		for (auto c : corrections) {
-
-			if (check(_blocks, c.x, c.y)) {
-				
-				blocks = _blocks;
-				move(c.x, c.y);
-				return true;
-			}
-		}
+		return wkicks(_blocks);
 	}
 
 	return false;
 }
 
-void Piece::fall() {
+int Piece::fall() {
+
+	int lines = 0;
 
 	while (check(0, 1)) {
 		
 		move(0, 1);
+		lines++;
 	}
+
+	return lines;
 }
 
 bool Piece::check(array<Block, 4> _blocks, int _x, int _y) {
@@ -159,6 +151,29 @@ void Piece::draw() {
 
 		Tetris::window.draw(Tetris::blocks);
 	}
+}
+
+bool Piece::wkicks(std::array<Block, 4> _blocks) {
+
+	array<array<Block, 5>, 4> _WKTests;
+
+	std::cout << rstatus << std::endl;
+
+	if (piece != 0) _WKTests = WKTests;
+	else _WKTests = IWKTests;
+
+	for (auto c : _WKTests[rstatus]) {
+
+		if (check(_blocks, c.x, c.y)) {
+		
+			rstatus = (rstatus + 1) % 4;
+			blocks = _blocks;
+			move(c.x, c.y);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 array<Block, 4> Piece::getBlocks() {
