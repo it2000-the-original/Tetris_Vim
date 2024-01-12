@@ -1,0 +1,5 @@
+/home/it2000/Documenti/Programmazione/Tetris_by_it2000/build/CMakeFiles/edit_cache.dir
+/home/it2000/Documenti/Programmazione/Tetris_by_it2000/build/CMakeFiles/rebuild_cache.dir
+/home/it2000/Documenti/Programmazione/Tetris_by_it2000/build/Tetris_by_it2000/CMakeFiles/Tetris.dir
+/home/it2000/Documenti/Programmazione/Tetris_by_it2000/build/Tetris_by_it2000/CMakeFiles/edit_cache.dir
+/home/it2000/Documenti/Programmazione/Tetris_by_it2000/build/Tetris_by_it2000/CMakeFiles/rebuild_cache.dir
