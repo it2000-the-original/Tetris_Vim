@@ -1,4 +1,5 @@
 #include "Generator.hpp"
+#include <cstdlib>
 
 void Generator::generate() {
 
