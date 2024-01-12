@@ -36,12 +36,13 @@ void Tetris::init(const int FPS, std::string title) {
 
 	background.setTexture(*wTexture);
 	blocks.setTexture(*bTexture);
-	piece.set(5);
 	sTime = seconds(0.5f);
 
 	matrix.init();
 	status.init();
 	preview.init();
+
+	piece.set(preview.get());
 
 	std::cout << "Window has been created" << std::endl;
 }
@@ -50,24 +51,22 @@ void Tetris::update() {
 
 	icheck();
 
-	if (last) {
-
-		if (fclock.getElapsedTime() < fTime) {
-			if (rotated or rmoved or lmoved)
-				sclock.restart();
-		}
-		
-		else jumpStep = true;
-	}
+	std::cout << LDMoves << std::endl;
 
 	if (sclock.getElapsedTime() > sTime or jumpStep) {
 
 		step();
 		sclock.restart();
 		jumpStep = false;
+
 	}
 
-	checkLast();
+	if (!lockdown and !piece.check(0, 1)) 
+		lockdown = true;
+
+	if (lockdown)
+		lockDown();
+
 	ghost.update();
 	preview.update();
 	status.update();
@@ -133,7 +132,14 @@ void Tetris::moveRight() {
 
 		if (!rmoved or rclock.getElapsedTime() >= rTime) {
 
-			piece.move(1, 0);
+			if (piece.move(1, 0)) {
+
+				if (lockdown and LDMoves <= LDMOVES) {
+					sclock.restart();
+					LDMoves++;
+				}	
+			}
+			
 			rclock.restart();
 		}
 
@@ -151,7 +157,14 @@ void Tetris::moveLeft() {
 
 		if (!lmoved or lclock.getElapsedTime() >= lTime) {
 
-			piece.move(-1, 0);
+			if (piece.move(-1, 0)) {
+
+				if (lockdown and LDMoves <= LDMOVES) {
+					sclock.restart();
+					LDMoves++;
+				}
+			}
+
 			lclock.restart();
 		}
 
@@ -177,8 +190,15 @@ void Tetris::rotate() {
 
 	if (!rotated) {
 
-		if (piece.rotate()) 
+		if (piece.rotate()) {
+
 			rotated = true;
+
+			if (lockdown and LDMoves <= LDMOVES) {
+				sclock.restart();
+				LDMoves++;
+			}
+		}
 	}
 
 	rotating = true;
@@ -204,6 +224,9 @@ void Tetris::step() {
 		preview.generate();
 		piece.set(preview.get());
 
+		lockdown = false;
+		LDMoves = 0;
+
 		// Game over
 		if (!piece.check(0, 0)) restart();
 	}
@@ -219,18 +242,22 @@ bool Tetris::isRunning() {
 	return window.isOpen();
 }
 
-void Tetris::checkLast() {
+void Tetris::lockDown() {
 
-	if (!piece.check(0, 1) and !lasted) {
+	if (piece.getPiece() != 0) {
 
-		fclock.restart();
-		last = true;
-		lasted = true;
+		if (piece.check(0, 2)) {
+			lockdown = false;
+			LDMoves = 0;
+		}
 	}
 
-	else if (piece.check(0, 3)) {
-		last = false;
-		lasted = false;
+	else {
+
+		if (piece.check(0, 3)) {
+			lockdown = false;
+			LDMoves = 0;
+		}
 	}
 }
 
@@ -240,7 +267,6 @@ void Tetris::restart() {
 	preview.init();
 	piece.set(preview.get());
 	sclock.restart();
-
 
 	sTime = seconds(0.5f);
 }

@@ -157,8 +157,6 @@ bool Piece::wkicks(std::array<Block, 4> _blocks) {
 
 	array<array<Block, 5>, 4> _WKTests;
 
-	std::cout << rstatus << std::endl;
-
 	if (piece != 0) _WKTests = WKTests;
 	else _WKTests = IWKTests;
 

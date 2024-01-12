@@ -17,6 +17,8 @@ const int PB = 32; // Size in pixels of a single block
 const int MX = 64; // The x position in pixels where the matrix starts
 const int MY = 64; // The same thing of before but in y
 
+const int LDMOVES = 15; // Lock Down last moves
+
 class Tetris {
 
 private:
@@ -32,7 +34,6 @@ private:
 	const Time lTime = seconds(0.05f);
 	const Time prTime = seconds(0.2f);
 	const Time plTime = seconds(0.2f);
-	const Time fTime = seconds(3.0f);
 
 	// Clocks for various actions
 
@@ -42,7 +43,6 @@ private:
 	Clock lclock;  // Move left
 	Clock prclock; // Pre-move right
 	Clock plclock; // Pre-move left
-	Clock fclock;  // Final time
 
 	// To prevent the repetition of the same specific
 	// action while the key is pressed
@@ -65,8 +65,8 @@ private:
 
 	bool jumpStep = false;
 
-	bool last = false;   // Last step
-	bool lasted = false;
+	bool lockdown = false;
+	int LDMoves = 0;
 
 public:
 
@@ -96,6 +96,6 @@ public:
 	void fall();
 
 	bool isRunning();
-	void checkLast();
+	void lockDown();
 	void restart();
 };
