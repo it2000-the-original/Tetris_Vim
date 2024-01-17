@@ -30,10 +30,10 @@ private:
 	// Time between a movement to another
 
 	const Time dTime = seconds(0.03f);
-	const Time rTime = seconds(0.05f);
-	const Time lTime = seconds(0.05f);
-	const Time prTime = seconds(0.2f);
-	const Time plTime = seconds(0.2f);
+	const Time rTime = seconds(0.08f);
+	const Time lTime = seconds(0.08f);
+	const Time prTime = seconds(0.15f);
+	const Time plTime = seconds(0.15f);
 
 	// Clocks for various actions
 

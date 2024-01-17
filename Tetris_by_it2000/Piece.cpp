@@ -130,6 +130,44 @@ bool Piece::check(int _x, int _y) {
 	return status;
 }
 
+bool Piece::checkTSpin() {
+
+	if (piece == 5) {
+
+		// Anterior blocks
+		int ablocks = _TSpinABlocks();
+
+		// Posterior blocks
+		int pblocks = _TSpinPBlocks();
+
+		if (ablocks + pblocks >= 3) {
+
+			if (ablocks == 2 or wkick == 4) return true;
+		}
+	}
+
+	return false;
+}
+
+bool Piece::checkMiniTSpin() {
+
+	if (piece == 5) {
+
+		// Anterior blocks
+		int ablocks = _TSpinABlocks();
+
+		// Posterior blocks
+		int pblocks = _TSpinPBlocks();
+
+		if (ablocks + pblocks >= 3) {
+
+			if (pblocks == 2 and wkick != 4) return true;
+		}
+	}
+
+	return false;
+}
+
 void Piece::depose() {
 
 	for (auto& block : blocks) {
@@ -159,6 +197,7 @@ bool Piece::wkicks(std::array<Block, 4> _blocks) {
 
 	if (piece != 0) _WKTests = WKTests;
 	else _WKTests = IWKTests;
+	wkick = 0;
 
 	for (auto c : _WKTests[rstatus]) {
 
@@ -169,6 +208,8 @@ bool Piece::wkicks(std::array<Block, 4> _blocks) {
 			move(c.x, c.y);
 			return true;
 		}
+
+		wkick++;
 	}
 
 	return false;
@@ -182,4 +223,67 @@ array<Block, 4> Piece::getBlocks() {
 int Piece::getPiece() {
 
 	return piece;
+}
+
+int Piece::_TSpinABlocks() {
+
+	int ablocks = 0;
+
+	switch (rstatus) {
+
+	case 0:
+		if (Tetris::matrix.matrix[x][y] != -1) ablocks++;
+		if (Tetris::matrix.matrix[x + 2][y] != -1) ablocks++;
+		break;
+
+	case 1:
+		if (Tetris::matrix.matrix[x + 2][y] != -1) ablocks++;
+		if (Tetris::matrix.matrix[x + 2][y + 2] != -1) ablocks++;
+		break;
+
+	case 2:
+		if (Tetris::matrix.matrix[x][y + 2] != -1) ablocks++;
+		if (Tetris::matrix.matrix[x + 2][y + 2] != -1) ablocks++;
+		break;
+
+	case 3:
+		if (Tetris::matrix.matrix[x][y] != -1) ablocks++;
+		if (Tetris::matrix.matrix[x][y + 2] != -1) ablocks++;
+		break;
+	}
+
+	return ablocks;
+}
+
+int Piece::_TSpinPBlocks() {
+
+	int pblocks = 0;
+
+	switch (rstatus) {
+
+	case 0:
+		if (y + 2 >= Matrix::H) { pblocks += 2; break; }
+		if (Tetris::matrix.matrix[x][y + 2] != -1) pblocks++;
+		if (Tetris::matrix.matrix[x + 2][y + 2] != -1) pblocks++;
+		break;
+
+	case 1:
+		if (x < 0) { pblocks += 2; break; }
+		if (Tetris::matrix.matrix[x][y] != -1) pblocks++;
+		if (Tetris::matrix.matrix[x][y + 2] != -1) pblocks++;
+		break;
+
+	case 2:
+		if (Tetris::matrix.matrix[x][y] != -1) pblocks++;
+		if (Tetris::matrix.matrix[x + 2][y] != -1) pblocks++;
+		break;
+
+	case 3:
+		if (x + 2 >= Matrix::W) { pblocks += 2; break; }
+		if (Tetris::matrix.matrix[x + 2][y] != -1) pblocks++;
+		if (Tetris::matrix.matrix[x + 2][y + 2] != -1) pblocks++;
+		break;
+	}
+
+	return pblocks;
 }

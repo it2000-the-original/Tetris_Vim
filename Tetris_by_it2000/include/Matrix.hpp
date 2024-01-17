@@ -8,6 +8,13 @@ const int SINGLE = 100;
 const int DOUBLE = 300;
 const int TRIPLE = 500;
 const int TETRIS = 800;
+const int T_SPIN = 400;
+const int MT_SPIN = 100;
+const int TSINGLE = 800;
+const int TDOUBLE = 1200;
+const int TTRIPLE = 1600;
+const int MTSINGLE = 200;
+const int MTDOUBLE = 400;
 
 
 class Matrix {
@@ -15,10 +22,11 @@ class Matrix {
 private:
 
 	int comboCount;
-	static const int W = 10; // Width
-	static const int H = 20; // Height
 
 public:
+
+	static const int W = 10; // Width
+	static const int H = 20; // Height
 
 	array<array<int, H>, W> matrix;
 
@@ -29,4 +37,5 @@ public:
 
 	void checkLinesScore(int rLines);
 	void checkComboScore(int rLines);
+	void checkTSpinScore(int rLines);
 };

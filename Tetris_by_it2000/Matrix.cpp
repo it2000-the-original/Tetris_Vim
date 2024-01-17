@@ -1,3 +1,4 @@
+#include "Piece.hpp"
 #include "Matrix.hpp"
 #include "Tetris.hpp"
 #include "Status.hpp"
@@ -56,8 +57,9 @@ void Matrix::check() {
 		}
 	}
 
-	checkLinesScore(removedLines);
-	checkComboScore(removedLines);
+	//checkLinesScore(removedLines);
+	//checkComboScore(removedLines);
+	checkTSpinScore(removedLines);
 }
 
 void Matrix::del(int l) {
@@ -92,4 +94,30 @@ void Matrix::checkComboScore(int rLines) {
 	}
 
 	else comboCount = -1;
+}
+
+void Matrix::checkTSpinScore(int rLines) {
+
+	int score = 0;
+
+	if (Tetris::piece.checkTSpin()) {
+
+		switch (rLines) {
+		case 0: score = T_SPIN  * Tetris::status.level; break;
+		case 1: score = TSINGLE * Tetris::status.level; break;
+		case 2: score = TDOUBLE * Tetris::status.level; break;
+		case 3: score = TTRIPLE * Tetris::status.level; break;
+		}
+	}
+
+	else if (Tetris::piece.checkMiniTSpin()) {
+
+		switch (rLines) {
+		case 0: score = MT_SPIN  * Tetris::status.level; break;
+		case 1: score = MTSINGLE * Tetris::status.level; break;
+		case 2: score = MTDOUBLE * Tetris::status.level; break;
+		}
+	}
+
+	Tetris::status.score += score;
 }

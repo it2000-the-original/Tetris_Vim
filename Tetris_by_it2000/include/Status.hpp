@@ -17,6 +17,8 @@ private:
 	const int S = 22;  // Text font size
 	const int NS = 15; // Number font size
 
+	const int LEVEL_LINES = 10; // The lines to remove to increase the level
+
 	sf::Text scoreText;
 	sf::Text levelText;
 	sf::Text linesText;

@@ -41,6 +41,7 @@ private:
 
 	int piece;
 	int rstatus = 0;
+	int wkick = 0;
 
 	std::array<Block, 4> blocks;
 
@@ -57,6 +58,10 @@ public:
 	bool check(std::array<Block, 4> _blocks);
 	bool check(int _x, int _y);
 
+	// Check the T-Spin
+	bool checkTSpin();
+	bool checkMiniTSpin();
+
 	void depose(); // Put the piece inside the matrix
 
 	void draw();
@@ -64,4 +69,7 @@ public:
 	bool wkicks(std::array<Block, 4> _blocks);
 	std::array<Block, 4> getBlocks();
 	int getPiece();
+
+	int _TSpinABlocks();
+	int _TSpinPBlocks();
 };

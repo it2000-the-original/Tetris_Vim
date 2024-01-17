@@ -36,7 +36,7 @@ void Tetris::init(const int FPS, std::string title) {
 
 	background.setTexture(*wTexture);
 	blocks.setTexture(*bTexture);
-	sTime = seconds(0.5f);
+	sTime = seconds(1.f);
 
 	matrix.init();
 	status.init();
@@ -51,8 +51,6 @@ void Tetris::update() {
 
 	icheck();
 
-	std::cout << LDMoves << std::endl;
-
 	if (sclock.getElapsedTime() > sTime or jumpStep) {
 
 		step();
@@ -61,7 +59,7 @@ void Tetris::update() {
 
 	}
 
-	if (!lockdown and !piece.check(0, 1)) 
+	if (!lockdown and !piece.check(0, 1))
 		lockdown = true;
 
 	if (lockdown)
@@ -134,7 +132,7 @@ void Tetris::moveRight() {
 
 			if (piece.move(1, 0)) {
 
-				if (lockdown and LDMoves <= LDMOVES) {
+				if (lockdown and LDMoves < LDMOVES) {
 					sclock.restart();
 					LDMoves++;
 				}	
@@ -159,7 +157,7 @@ void Tetris::moveLeft() {
 
 			if (piece.move(-1, 0)) {
 
-				if (lockdown and LDMoves <= LDMOVES) {
+				if (lockdown and LDMoves < LDMOVES) {
 					sclock.restart();
 					LDMoves++;
 				}
@@ -194,7 +192,7 @@ void Tetris::rotate() {
 
 			rotated = true;
 
-			if (lockdown and LDMoves <= LDMOVES) {
+			if (lockdown and LDMoves < LDMOVES) {
 				sclock.restart();
 				LDMoves++;
 			}
@@ -226,6 +224,8 @@ void Tetris::step() {
 
 		lockdown = false;
 		LDMoves = 0;
+
+		sTime = seconds(0.8 - ((status.level - 1) * 0.007));
 
 		// Game over
 		if (!piece.check(0, 0)) restart();

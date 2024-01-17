@@ -54,6 +54,8 @@ void Status::update() {
 	numScoreText.setPosition(Vector2f(float(CX + (CS - numScoreText.getLocalBounds().width) / 2), float(CY + NPADDING)));
 	numLevelText.setPosition(Vector2f(float(CX + (CS - numLevelText.getLocalBounds().width) / 2), float(CY + CS + NPADDING)));
 	numLinesText.setPosition(Vector2f(float(CX + (CS - numLinesText.getLocalBounds().width) / 2), float(CY + CS * 2 + NPADDING)));
+
+	level = lines / LEVEL_LINES + 1;
 }
 
 void Status::draw() {
