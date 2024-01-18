@@ -24,12 +24,15 @@ void Ghost::draw() {
 
 	for (auto& block : blocks) {
 
-		Tetris::blocks.setPosition(Vector2f(
-			float(MX + block.x * PB),
-			float(MY + block.y * PB)
-		));
+		if (block.y >= 0) {
 
-		Tetris::window.draw(Tetris::blocks);
+			Tetris::blocks.setPosition(Vector2f(
+				float(MX + block.x * PB),
+				float(MY + block.y * PB)
+			));
+
+			Tetris::window.draw(Tetris::blocks);
+		}
 	}
 
 	Tetris::blocks.setColor(Color(255, 255, 255, 255));

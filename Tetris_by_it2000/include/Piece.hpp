@@ -62,7 +62,7 @@ public:
 	bool checkTSpin();
 	bool checkMiniTSpin();
 
-	void depose(); // Put the piece inside the matrix
+	bool depose(); // Put the piece inside the matrix
 
 	void draw();
 

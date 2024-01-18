@@ -34,6 +34,7 @@ public:
 	void draw();
 	void check();    // Check full lines
 	void del(int l); // Clear a full line
+	bool empty(int x, int y);
 
 	void checkLinesScore(int rLines);
 	void checkComboScore(int rLines);

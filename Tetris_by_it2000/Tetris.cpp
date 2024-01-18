@@ -217,18 +217,20 @@ void Tetris::step() {
 
 	if (!piece.check(0, 1)) {
 
-		piece.depose();
-		matrix.check();
-		preview.generate();
-		piece.set(preview.get());
+		if (piece.depose()) {
 
-		lockdown = false;
-		LDMoves = 0;
+			matrix.check();
+			preview.generate();
+			piece.set(preview.get());
 
-		sTime = seconds(0.8 - ((status.level - 1) * 0.007));
+			lockdown = false;
+			LDMoves = 0;
+
+			sTime = seconds(0.8 - ((status.level - 1) * 0.007));
+		}
 
 		// Game over
-		if (!piece.check(0, 0)) restart();
+		else restart();
 	}
 
 	else {
@@ -265,8 +267,9 @@ void Tetris::restart() {
 
 	matrix.init();
 	preview.init();
-	piece.set(preview.get());
+	status.reset();
 	sclock.restart();
+	piece.set(preview.get());
 
-	sTime = seconds(0.5f);
+	sTime = seconds(0.8 - ((status.level - 1) * 0.007));
 }

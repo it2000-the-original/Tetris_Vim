@@ -57,8 +57,8 @@ void Matrix::check() {
 		}
 	}
 
-	//checkLinesScore(removedLines);
-	//checkComboScore(removedLines);
+	checkLinesScore(removedLines);
+	checkComboScore(removedLines);
 	checkTSpinScore(removedLines);
 }
 
@@ -73,6 +73,22 @@ void Matrix::del(int l) {
 	}
 
 	Tetris::status.lines++;
+}
+
+bool Matrix::empty(int x, int y) {
+
+	if (x >= 0 and x < W and y < H) {
+
+		if (y >= 0) {
+
+			if (matrix[x][y] == -1)
+				return true;
+		}
+
+		else return true;
+	}
+
+	return false;
 }
 
 void Matrix::checkLinesScore(int rLines) {

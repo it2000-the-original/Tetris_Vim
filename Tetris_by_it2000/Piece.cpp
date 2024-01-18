@@ -17,6 +17,10 @@ void Piece::set(int p) {
 		blocks[i].x = pieces[piece][i] % 4 + x;
 		blocks[i].y = pieces[piece][i] / 4;
 	}
+
+	int shift = 0;
+	while (!check(0, shift)) shift--;
+	move(0, shift);
 }
 
 bool Piece::move(int _x, int _y) {
@@ -82,9 +86,7 @@ bool Piece::check(array<Block, 4> _blocks, int _x, int _y) {
 
 	for (auto& block : _blocks) {
 
-		if (block.x + _x < 0 or block.x + _x >= Tetris::matrix.matrix.size() or
-			block.y + _y < 0 or block.y + _y >= Tetris::matrix.matrix[0].size() or
-			Tetris::matrix.matrix[block.x + _x][block.y + _y] != -1) {
+		if (!Tetris::matrix.empty(block.x + _x, block.y + _y)) {
 
 			status = false;
 			break;
@@ -100,9 +102,7 @@ bool Piece::check(array<Block, 4> _blocks) {
 
 	for (auto& block : _blocks) {
 
-		if (block.x < 0 or block.x >= Tetris::matrix.matrix.size() or
-			block.y < 0 or block.y >= Tetris::matrix.matrix[0].size() or
-			Tetris::matrix.matrix[block.x][block.y] != -1) {
+		if (!Tetris::matrix.empty(block.x, block.y)) {
 
 			status = false;
 			break;
@@ -118,9 +118,7 @@ bool Piece::check(int _x, int _y) {
 
 	for (auto& block : blocks) {
 
-		if (block.x + _x < 0 or block.x + _x >= Tetris::matrix.matrix.size() or
-			block.y + _y < 0 or block.y + _y >= Tetris::matrix.matrix[0].size() or
-			Tetris::matrix.matrix[block.x + _x][block.y + _y] != -1) {
+		if (!Tetris::matrix.empty(block.x + _x, block.y + _y)) {
 
 			status = false;
 			break;
@@ -168,12 +166,19 @@ bool Piece::checkMiniTSpin() {
 	return false;
 }
 
-void Piece::depose() {
+bool Piece::depose() {
+
+	for (auto& block : blocks) {
+
+		if (block.y < 0) return false;
+	}
 
 	for (auto& block : blocks) {
 
 		Tetris::matrix.matrix[block.x][block.y] = piece;
 	}
+
+	return true;
 }
 
 void Piece::draw() {
@@ -182,12 +187,15 @@ void Piece::draw() {
 
 	for (auto& block : blocks) {
 
-		Tetris::blocks.setPosition(Vector2f(
-			float(MX + block.x * PB),
-			float(MY + block.y * PB)
-		));
+		if (block.y >= 0) {
 
-		Tetris::window.draw(Tetris::blocks);
+			Tetris::blocks.setPosition(Vector2f(
+				float(MX + block.x * PB),
+				float(MY + block.y * PB)
+			));
+
+			Tetris::window.draw(Tetris::blocks);
+		}
 	}
 }
 
