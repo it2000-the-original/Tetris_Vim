@@ -5,7 +5,7 @@ const std::string title = "Tetris by it2000";
 
 int main() {
 
-	std::cout << "Tetris by it2000 version 1.0" << std::endl;
+	std::cout << "Tetris by it2000 version 0.1 pre-Alpha" << std::endl;
 
 	Tetris tetris;
 

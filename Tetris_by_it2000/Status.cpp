@@ -13,7 +13,8 @@ void Status::init() {
 		return;
 	}
 
-	font->setSmooth(false);
+	// This doesn't work on Linux
+	//font->setSmooth(false);
 
 	scoreText.setFont(*font);
 	levelText.setFont(*font);
