@@ -28,7 +28,7 @@ void Matrix::draw() {
 				float(MY + PB * j)
 			));
 
-			Tetris::window.draw(Tetris::blocks);
+			Tetris::window->draw(Tetris::blocks);
 		}
 	}
 }

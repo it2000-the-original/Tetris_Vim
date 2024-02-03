@@ -42,7 +42,7 @@ void Preview::draw() {
 		for (auto& b : blocks[i]) {
 
 			Tetris::blocks.setPosition(Vector2f(float(b.x), float(b.y)));
-			Tetris::window.draw(Tetris::blocks);
+			Tetris::window->draw(Tetris::blocks);
 		}
 	}
 

@@ -1,5 +1,6 @@
 #include "Status.hpp"
 #include "Tetris.hpp"
+#include "Config.h"
 #include <iostream>
 
 using namespace sf;
@@ -13,8 +14,10 @@ void Status::init() {
 		return;
 	}
 
+	#ifdef SMOTH_TEXT
 	// This doesn't work on Linux
-	//font->setSmooth(false);
+	font->setSmooth(false);
+	#endif
 
 	scoreText.setFont(*font);
 	levelText.setFont(*font);
@@ -61,12 +64,12 @@ void Status::update() {
 
 void Status::draw() {
 
-	Tetris::window.draw(scoreText);
-	Tetris::window.draw(levelText);
-	Tetris::window.draw(linesText);
-	Tetris::window.draw(numScoreText);
-	Tetris::window.draw(numLevelText);
-	Tetris::window.draw(numLinesText);
+	Tetris::window->draw(scoreText);
+	Tetris::window->draw(levelText);
+	Tetris::window->draw(linesText);
+	Tetris::window->draw(numScoreText);
+	Tetris::window->draw(numLevelText);
+	Tetris::window->draw(numLinesText);
 }
 
 void Status::reset() {

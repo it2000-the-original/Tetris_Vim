@@ -70,7 +70,7 @@ private:
 
 public:
 
-	static RenderWindow window;
+	static RenderWindow* window;
 	static Preview preview;
 	static Status status;
 	static Matrix matrix;

@@ -9,7 +9,7 @@ void Piece::set(int p) {
 	piece = p;
 	rstatus = 0;
 
-	x = (Tetris::matrix.matrix.size() - 4) / 2;
+	x = (int(Tetris::matrix.matrix.size()) - 4) / 2;
 	y = 0;
 
 	for (int i = 0; i < 4; i++) {
@@ -194,7 +194,7 @@ void Piece::draw() {
 				float(MY + block.y * PB)
 			));
 
-			Tetris::window.draw(Tetris::blocks);
+			Tetris::window->draw(Tetris::blocks);
 		}
 	}
 }

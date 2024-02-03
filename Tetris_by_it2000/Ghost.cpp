@@ -31,7 +31,7 @@ void Ghost::draw() {
 				float(MY + block.y * PB)
 			));
 
-			Tetris::window.draw(Tetris::blocks);
+			Tetris::window->draw(Tetris::blocks);
 		}
 	}
 

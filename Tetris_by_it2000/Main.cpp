@@ -1,15 +1,33 @@
 ﻿#include "Tetris.hpp"
+#include "Config.h"
+
+#ifdef HIDE_CONSOLE
+
+// If you are on windows and HIDE_CONSOLE 
+// option is anabled, the console will be hidden
+#include <Windows.h>
+
+#endif
 
 const int FPS = 60;
 const std::string title = "Tetris by it2000";
 
-int main() {
+#ifdef HIDE_CONSOLE
 
-	std::cout << "Tetris by it2000 version 0.1 pre-Alpha" << std::endl;
+int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
+
+#else
+
+int main(int argc, char** argv)
+
+#endif
+
+{
+	std::cout << "Tetris by it2000 version " << VERSION_MAJOR << "." << VERSION_MINOR << std::endl;
 
 	Tetris tetris;
 
-	srand(time(NULL));
+	srand(unsigned(time(NULL)));
 
 	tetris.init(FPS, title);
 

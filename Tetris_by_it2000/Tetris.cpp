@@ -5,7 +5,7 @@
 #include "Piece.hpp"
 #include "Preview.hpp"
 
-RenderWindow Tetris::window;
+RenderWindow* Tetris::window;
 Status Tetris::status;
 Matrix Tetris::matrix;
 Sprite Tetris::blocks;
@@ -18,9 +18,9 @@ Tetris::Tetris() {}
 
 void Tetris::init(const int FPS, std::string title) {
 
-	window.create(VideoMode(619, 768), title, Style::Default);
-	window.setFramerateLimit(FPS);
-	window.setActive(true);
+	window = new RenderWindow(VideoMode(619, 768), title, Style::Default);
+	window->setFramerateLimit(FPS);
+	window->setActive(true);
 
 	// Defining the textures
 
@@ -30,7 +30,7 @@ void Tetris::init(const int FPS, std::string title) {
 	if (!wTexture->loadFromFile(WPath) or
 		!bTexture->loadFromFile(BPath)) {
 
-		window.close();
+		window->close();
 		return;
 	}
 
@@ -72,12 +72,12 @@ void Tetris::update() {
 
 void Tetris::echeck() {
 	
-	while (window.pollEvent(event)) {
+	while (window->pollEvent(event)) {
 
 		switch (event.type) {
 
 		case Event::Closed:
-			window.close();
+			window->close();
 			break;
 		}
 	}
@@ -112,16 +112,16 @@ void Tetris::icheck() {
 
 void Tetris::render() {
 	
-	window.clear();
+	window->clear();
 
-	window.draw(background);
+	window->draw(background);
 	matrix.draw();
 	ghost.draw();
 	piece.draw();
 	preview.draw();
 	status.draw();
 
-	window.display();
+	window->display();
 }
 
 void Tetris::moveRight() {
@@ -226,7 +226,7 @@ void Tetris::step() {
 			lockdown = false;
 			LDMoves = 0;
 
-			sTime = seconds(0.8 - ((status.level - 1) * 0.007));
+			sTime = seconds(float(0.8 - ((status.level - 1) * 0.007)));
 		}
 
 		// Game over
@@ -241,7 +241,7 @@ void Tetris::step() {
 
 bool Tetris::isRunning() {
 
-	return window.isOpen();
+	return window->isOpen();
 }
 
 void Tetris::lockDown() {
@@ -271,5 +271,5 @@ void Tetris::restart() {
 	sclock.restart();
 	piece.set(preview.get());
 
-	sTime = seconds(0.8 - ((status.level - 1) * 0.007));
+	sTime = seconds(float(0.8 - ((status.level - 1) * 0.007)));
 }

@@ -1,6 +1,6 @@
 #include <array>
 
-class Block;
+struct Block;
 class Generator;
 
 using namespace std;

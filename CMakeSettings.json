@@ -1,50 +1,7 @@
 ﻿{
 	"configurations": [
 		{
-			"name": "x64-Debug",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"inheritEnvironments": [ "msvc_x64_x64" ],
-			"buildRoot": "${projectDir}\\out\\build\\${name}",
-			"installRoot": "${projectDir}\\out\\install\\${name}",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "",
-			"ctestCommandArgs": "",
-			"cmakeToolchain": "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake",
-			"variables": [
-				{
-					"name": "CMAKE_CXX_FLAGS",
-					"value": "/wd26495 /wd6385 /wd4530",
-					"type": "STRING"
-				}
-			]
-		},
-		{
-			"name": "x64-Release",
-			"generator": "Ninja",
-			"configurationType": "RelWithDebInfo",
-			"buildRoot": "${projectDir}\\out\\build\\${name}",
-			"installRoot": "${projectDir}\\out\\install\\${name}",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "",
-			"ctestCommandArgs": "",
-			"inheritEnvironments": [ "msvc_x64_x64" ],
-			"cmakeToolchain": "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake"
-		},
-		{
-			"name": "x86-Release",
-			"generator": "Ninja",
-			"configurationType": "RelWithDebInfo",
-			"buildRoot": "${projectDir}\\out\\build\\${name}",
-			"installRoot": "${projectDir}\\out\\install\\${name}",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "",
-			"ctestCommandArgs": "",
-			"inheritEnvironments": [ "msvc_x86" ],
-			"cmakeToolchain": "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake"
-		},
-		{
-			"name": "x86-Debug",
+			"name": "Debug",
 			"generator": "Ninja",
 			"configurationType": "Debug",
 			"buildRoot": "${projectDir}\\out\\build\\${name}",
@@ -52,36 +9,18 @@
 			"cmakeCommandArgs": "",
 			"buildCommandArgs": "",
 			"ctestCommandArgs": "",
-			"cmakeToolchain": "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake",
-			"inheritEnvironments": [ "msvc_x86" ]
+			"inheritEnvironments": [ "msvc_x64_x64" ]
 		},
 		{
-			"name": "WSL-GCC-Debug",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"buildRoot": "${projectDir}\\out\\build\\${name}",
-			"installRoot": "${projectDir}\\out\\install\\${name}",
-			"cmakeExecutable": "cmake",
-			"cmakeCommandArgs": "",
-			"buildCommandArgs": "",
-			"ctestCommandArgs": "",
-			"inheritEnvironments": [ "linux_x64" ],
-			"wslPath": "${defaultWSLPath}",
-			"cmakeToolchain": "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake"
-		},
-		{
-			"name": "WSL-GCC-Release",
+			"name": "Release",
 			"generator": "Ninja",
 			"configurationType": "RelWithDebInfo",
 			"buildRoot": "${projectDir}\\out\\build\\${name}",
 			"installRoot": "${projectDir}\\out\\install\\${name}",
-			"cmakeExecutable": "cmake",
 			"cmakeCommandArgs": "",
 			"buildCommandArgs": "",
 			"ctestCommandArgs": "",
-			"inheritEnvironments": [ "linux_x64" ],
-			"wslPath": "${defaultWSLPath}",
-			"variables": []
+			"inheritEnvironments": [ "msvc_x64_x64" ]
 		}
 	]
 }
