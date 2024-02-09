@@ -3,6 +3,8 @@
 #include "Tetris.hpp"
 #include "Status.hpp"
 
+using namespace sf;
+
 void Matrix::init() {
 
 	comboCount = -1;

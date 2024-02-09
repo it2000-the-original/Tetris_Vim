@@ -3,6 +3,7 @@
 #include "Tetris.hpp"
 
 using namespace std;
+using namespace sf;
 
 void Piece::set(int p) {
 

@@ -3,6 +3,8 @@
 #include "Tetris.hpp"
 #include "Piece.hpp"
 
+using namespace sf;
+
 Generator Preview::generator;
 array<array<Block, 4>, 3> Preview::blocks;
 

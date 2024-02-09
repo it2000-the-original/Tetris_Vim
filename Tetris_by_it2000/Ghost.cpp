@@ -4,6 +4,7 @@
 #include "Ghost.hpp"
 
 using namespace std;
+using namespace sf;
 
 array<Block, 4> Ghost::blocks;
 
