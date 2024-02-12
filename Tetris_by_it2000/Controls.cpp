@@ -1,22 +1,15 @@
 #include "Controls.hpp"
+#include "Preview.hpp"
 #include "Status.hpp"
 #include "Tetris.hpp"
 #include "Piece.hpp"
+#include "Hold.hpp"
 
 using namespace sf;
 
 void Controls::checkInputs() {
 
-	if (_checkRightInputs() xor _checkLeftInputs()) {
-
-		if (_checkRightInputs()) moveRight(); else prclock.restart();
-		if (_checkLeftInputs()) moveLeft();   else plclock.restart();
-	}
-
-	else {
-		prclock.restart();
-		plclock.restart();
-	}
+	_checkHorizontalMoves();
 
 	if (_checkDownInputs()) moveDown();
 
@@ -25,11 +18,18 @@ void Controls::checkInputs() {
 
 	if (_checkSpaceInputs()) drop();
 	else dropped = false;
+
+	if (_checkHoldInputs()) hold();
 }
 
 bool Controls::isStepReady() {
 
 	return sclock.getElapsedTime() > Tetris::sTime or skClock;
+}
+
+void Controls::enableHold() {
+
+	holdEnb = true;
 }
 
 void Controls::resetStep() {
@@ -53,11 +53,12 @@ bool Controls::lookDown() {
 
 void Controls::moveRight() {
 	
-	if (rclock.getElapsedTime() > rTime) {
+	if (rclock.getElapsedTime() > rTime or !rmoved) {
 
 		Tetris::piece.move(1, 0);
 		rclock.restart();
 		_checkLookDown();
+		rmoved = true;
 	}
 
 	if (prclock.getElapsedTime() <= prTime) {
@@ -68,11 +69,12 @@ void Controls::moveRight() {
 
 void Controls::moveLeft() {
 	
-	if (lclock.getElapsedTime() > lTime) {
+	if (lclock.getElapsedTime() > lTime or !lmoved) {
 
 		Tetris::piece.move(-1, 0);
 		lclock.restart();
 		_checkLookDown();
+		lmoved = true;
 	}
 
 	if (plclock.getElapsedTime() <= plTime) {
@@ -115,6 +117,67 @@ void Controls::drop() {
 	}
 }
 
+void Controls::hold() {
+
+	if (holdEnb) {
+
+		int tetromino = Tetris::piece.getPiece();
+
+		if (Tetris::hold.get() != -1) {
+
+			Tetris::piece.set(Tetris::hold.get());
+		}
+
+		else {
+			Tetris::preview.generate();
+			Tetris::piece.set(Tetris::preview.get());
+		}
+
+		Tetris::hold.set(tetromino);
+		holdEnb = false;
+	}
+}
+
+void Controls::_checkHorizontalMoves() {
+
+	if (_checkRightInputs() xor _checkLeftInputs()) {
+
+		if (_checkRightInputs()) moveRight(); else _resetRightMove();
+		if (_checkLeftInputs())  moveLeft();  else _resetLeftMove();
+	}
+
+	else {
+		_resetRightMove();
+		_resetLeftMove();
+	}
+}
+
+void Controls::_resetRightMove() {
+
+	prclock.restart();
+	rmoved = false;
+}
+
+void Controls::_resetLeftMove() {
+
+	plclock.restart();
+	lmoved = false;
+}
+
+void Controls::_checkLookDown() {
+
+	if (!lookDown()) {
+
+		if (moves < MOVES) {
+			sclock.restart();
+			moves++;
+			return;
+		}
+	}
+
+	else moves = 0;
+}
+
 bool Controls::_checkSpaceInputs() {
 
 	return Keyboard::isKeyPressed(Keyboard::Space);
@@ -141,6 +204,13 @@ bool Controls::_checkDownInputs() {
 		Keyboard::isKeyPressed(Keyboard::J);
 }
 
+bool Controls::_checkHoldInputs() {
+
+	return
+		Keyboard::isKeyPressed(Keyboard::C) or
+		Keyboard::isKeyPressed(Keyboard::U);
+}
+
 bool Controls::_checkUpInputs() {
 
 	return
@@ -148,16 +218,4 @@ bool Controls::_checkUpInputs() {
 		Keyboard::isKeyPressed(Keyboard::K);
 }
 
-void Controls::_checkLookDown() {
 
-	if (!lookDown()) {
-
-		if (moves < MOVES) {
-			sclock.restart();
-			moves++;
-			return;
-		}
-	}
-
-	else moves = 0;
-}

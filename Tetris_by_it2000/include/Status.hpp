@@ -1,13 +1,11 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-const std::string FPath = "fonts/Retro Gaming.ttf";
-
 class Status {
 
 private:
 
-	const int CX = 459; // Status panel x position
+	const int CX = 608; // Status panel x position
 	const int CY = 416; // Status panel y position 
 	const int CS = 96;  // Size of a single box in the panel
 

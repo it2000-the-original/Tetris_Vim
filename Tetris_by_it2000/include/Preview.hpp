@@ -19,9 +19,9 @@ private:
 	static array<array<Block, 4>, 3> blocks;
 
 	const float SC = 0.6f; // Scale of a block
-	const int CX = 459;
-	const int CY = 64;
-	const int CS = 96;
+	const int CX = 608;    // X position of the preview panel
+	const int CY = 64;     // Y position of the preview panel
+	const int CS = 96;     // Size of the area for a single tetromino
 
 public:
 

@@ -69,6 +69,10 @@ public:
 	bool wkicks(std::array<Block, 4> _blocks);
 	std::array<Block, 4> getBlocks();
 	int getPiece();
+	
+	// Size in blocks of a piece
+	static int getWidth(int t);
+	static int getHeight(int t);
 
 	int _TSpinABlocks();
 	int _TSpinPBlocks();

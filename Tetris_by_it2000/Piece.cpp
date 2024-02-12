@@ -234,6 +234,18 @@ int Piece::getPiece() {
 	return piece;
 }
 
+int Piece::getWidth(int t) {
+
+	if (t == 0 or t == 3) return 4;
+	else return 3;
+}
+
+int Piece::getHeight(int t) {
+
+	if (t != 0) return 2;
+	else return 3;
+}
+
 int Piece::_TSpinABlocks() {
 
 	int ablocks = 0;

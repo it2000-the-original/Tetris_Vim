@@ -21,9 +21,12 @@ private:
 	sf::Clock prclock; // Pre-move right
 	sf::Clock plclock; // Pre-move left
 
+	bool rmoved  = false; // Is the first execution of the moveRight function?
+	bool lmoved  = false; // Is the first execution of the moveLeft function?
 	bool rotated = false; // Already rotated?
 	bool dropped = false; // Already dropped?
 	bool skClock = false; // Skip the sclock?
+	bool holdEnb = true;  // Is the hold function enabled?
 	
 	int moves = 0; // Number of moves
 
@@ -32,18 +35,27 @@ private:
 	void moveDown();
 	void rotate();
 	void drop();
+	void hold();
+
+	void _checkHorizontalMoves();
+	void _resetRightMove();
+	void _resetLeftMove();
+	void _checkLookDown();
+
+	// Input checking functions
 
 	bool _checkSpaceInputs();
 	bool _checkRightInputs();
 	bool _checkLeftInputs();
 	bool _checkDownInputs();
+	bool _checkHoldInputs();
 	bool _checkUpInputs();
-	void _checkLookDown();
 
 public:
 
 	void checkInputs();
 	bool isStepReady();
+	void enableHold();
 	void resetStep();
 	bool lookDown();
 };
