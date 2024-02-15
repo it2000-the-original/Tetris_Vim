@@ -7,9 +7,9 @@ endif()
 
 option(HIDE_CONSOLE "Use as a WIN32 application if you are on Windows" OFF)
 
-project ("Tetris_by_it2000" VERSION "0.2")
+project ("Tetris_Vim" VERSION "0.2")
 
-add_subdirectory("Tetris_by_it2000")
+add_subdirectory(${PROJECT_NAME})
 
 configure_file("Config.h.in" "Config.h")
 

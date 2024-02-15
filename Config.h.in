@@ -1,4 +1,4 @@
 // Current version of the project
 #pragma once
-#define VERSION_MAJOR @Tetris_by_it2000_VERSION_MAJOR@
-#define VERSION_MINOR @Tetris_by_it2000_VERSION_MINOR@
+#define VERSION_MAJOR @Tetris_Vim_VERSION_MAJOR@
+#define VERSION_MINOR @Tetris_Vim_VERSION_MINOR@
