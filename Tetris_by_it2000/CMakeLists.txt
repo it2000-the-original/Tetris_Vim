@@ -1,6 +1,12 @@
 ﻿find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 
-add_executable (Tetris "Main.cpp" "Tetris.cpp" "Matrix.cpp" "Piece.cpp" "Preview.cpp" "Ghost.cpp" "Status.cpp" "Generator.cpp" "Controls.cpp" "Hold.cpp")
+# Set the resource file if we are on Windows
+
+if (WIN32)
+	set(RESOURCE "../Resource.rc")
+endif(WIN32)
+
+add_executable (Tetris ${RESOURCE} "Main.cpp" "Tetris.cpp" "Matrix.cpp" "Piece.cpp" "Preview.cpp" "Ghost.cpp" "Status.cpp" "Generator.cpp" "Controls.cpp" "Hold.cpp")
 
 target_link_libraries(Tetris PRIVATE "sfml-system" "sfml-graphics" "sfml-window")
 
@@ -12,7 +18,12 @@ target_include_directories(Tetris PRIVATE "include" "${PROJECT_BINARY_DIR}")
 if (WIN32 AND HIDE_CONSOLE)
 	set_target_properties(Tetris PROPERTIES WIN32_EXECUTABLE TRUE)
 	target_compile_definitions(Tetris PRIVATE "HIDE_CONSOLE")
+
+	set(Tetris_ICON "../icon.ico") # Percorso dell'icona per Windows
+	set_target_properties(Tetris PROPERTIES WIN32_ICON_RESOURCE "${Tetris_ICON}")
+
 	message("-- Hide console enabled")
+
 endif(WIN32 AND HIDE_CONSOLE)
 
 # Check if use or not the antialiasing to the font

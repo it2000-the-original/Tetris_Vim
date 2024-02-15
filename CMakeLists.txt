@@ -9,18 +9,22 @@ option(HIDE_CONSOLE "Use as a WIN32 application if you are on Windows" OFF)
 
 project ("Tetris_by_it2000" VERSION "0.2")
 
-add_subdirectory ("Tetris_by_it2000")
+add_subdirectory("Tetris_by_it2000")
 
 configure_file("Config.h.in" "Config.h")
 
-set(TexturesDir "textures")
-set(FontsDir "fonts")
+set(TEXTURES_DIR "textures")
+set(FONTS_DIR "fonts")
 
-set(Background "${TexturesDir}/background.png")
-set(Blocks "${TexturesDir}/pieces.png")
-set(Font "${FontsDir}/Retro Gaming.ttf")
+set(BACKGROUND "${TEXTURES_DIR}/background.png")
+set(BLOCKS "${TEXTURES_DIR}/pieces.png")
+set(FONT "${FONTS_DIR}/Retro Gaming.ttf")
+set(EXECUTABLE_ICON "icon.ico")
+set(WINDOW_ICON "icon.png")
 
 # Copy fonts and textures to the build directory
-file(COPY "${PROJECT_SOURCE_DIR}/${Background}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}/${TexturesDir}")
-file(COPY "${PROJECT_SOURCE_DIR}/${Blocks}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}/${TexturesDir}")
-file(COPY "${PROJECT_SOURCE_DIR}/${Font}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}/${FontsDir}")
+file(COPY "${PROJECT_SOURCE_DIR}/${BACKGROUND}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}/${TEXTURES_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/${BLOCKS}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}/${TEXTURES_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/${FONT}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}/${FONTS_DIR}")
+file(COPY "${PROJECT_SOURCE_DIR}/${EXECUTABLE_ICON}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}")
+file(COPY "${PROJECT_SOURCE_DIR}/${WINDOW_ICON}" DESTINATION "${PROJECT_BINARY_DIR}/${PROJECT_NAME}")

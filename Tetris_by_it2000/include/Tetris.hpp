@@ -14,6 +14,7 @@ const sf::Color WColor = sf::Color(15, 15, 15, 255);
 const std::string WPath = "textures/background.png";
 const std::string BPath = "textures/pieces.png";
 const std::string FPath = "fonts/Retro Gaming.ttf";
+const std::string IPath = "icon.png";
 
 const int WW = 768;  // Window Width
 const int WH = 768;  // Window Height
@@ -58,6 +59,8 @@ public:
 	void checkWindowSize(int _w, int _h);
 	void resetView(int w, int h);
 	void loadTextures();
+	void loadFont();
+	void loadIcon();
 	bool isRunning();
-	void restart();
+	void reset();
 };

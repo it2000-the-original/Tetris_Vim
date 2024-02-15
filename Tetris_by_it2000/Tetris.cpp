@@ -31,9 +31,10 @@ void Tetris::init(const int FPS, std::string title) {
 	WView = window->getDefaultView();
 	window->setFramerateLimit(FPS);
 	window->setActive(true);
-	loadTextures();
 
-	sTime = seconds(1.f);
+	loadTextures();
+	loadFont();
+	loadIcon();
 
 	matrix.init();
 	status.init();
@@ -46,6 +47,9 @@ void Tetris::init(const int FPS, std::string title) {
 }
 
 void Tetris::update() {
+
+	// Setting the step time using the official formula
+	sTime = seconds(pow(0.8f - ((Tetris::status.level - 1) * 0.007f), Tetris::status.level - 1));
 
 	if (controls.isStepReady()) {
 
@@ -105,7 +109,7 @@ void Tetris::step() {
 			piece.set(preview.get());
 		}
 
-		else restart(); // Game Over
+		else reset(); // Game Over
 	}
 }
 
@@ -152,19 +156,39 @@ void Tetris::loadTextures() {
 	Texture* bTexture = new Texture();
 
 	if (!wTexture->loadFromFile(WPath) or
-		!bTexture->loadFromFile(BPath) or
-		!font.loadFromFile(FPath)) {
+		!bTexture->loadFromFile(BPath)) {
 
 		window->close();
-		return;
 	}
-
-	#ifdef SMOTH_TEXT 
-	font.setSmooth(false);
-	#endif
 
 	background.setTexture(*wTexture);
 	blocks.setTexture(*bTexture);
+}
+
+void Tetris::loadFont() {
+
+	if (!font.loadFromFile(FPath)) {
+
+		window->close();
+	}
+
+	#ifdef SMOTH_TEXT 
+
+	font.setSmooth(false); // Does not exist on Linux
+
+	#endif
+}
+
+void Tetris::loadIcon() {
+
+	sf::Image icon;
+
+	if (!icon.loadFromFile("icon.png")) {
+
+		window->close();
+	}
+
+	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 }
 
 bool Tetris::isRunning() {
@@ -172,7 +196,7 @@ bool Tetris::isRunning() {
 	return window->isOpen();
 }
 
-void Tetris::restart() {
+void Tetris::reset() {
 
 	matrix.init();
 	preview.init();
