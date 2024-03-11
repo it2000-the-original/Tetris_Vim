@@ -1,12 +1,14 @@
 #include <array>
 
+using Blocks = std::array<Block, 4>;
+
 struct Block;
 
 class Ghost {
 
 private:
 
-	static std::array<Block, 4> blocks;
+	static Blocks blocks;
 
 public:
 

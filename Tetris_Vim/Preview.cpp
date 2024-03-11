@@ -1,34 +1,36 @@
+#include "Tetromino.hpp"
 #include "Generator.hpp"
 #include "Preview.hpp"
 #include "Tetris.hpp"
-#include "Piece.hpp"
 
 using namespace sf;
+using namespace std;
 
 Generator Preview::generator;
-array<array<Block, 4>, 3> Preview::blocks;
+Tetrominos Preview::tetrominos;
 
 void Preview::init() {
 
 	generator.generate();
 
-	for (int i = 0; i < nexts.size(); i++) {
+	for (auto& n : next) {
 
-		nexts[i] = generator.getNext();
+		n = generator.getNext();
 	}
 }
 
 void Preview::update() {
 
-	for (int i = 0; i < blocks.size(); i++) {
+	for (int i = 0; i < tetrominos.size(); i++) {
 
-		int w = findWidth(nexts[i + 1]);
-		int h = findHeight(nexts[i + 1]);
+		int w = Tetromino::getWidth (next[i + 1]) * PB * SC;
+		int h = Tetromino::getHeight(next[i + 1]) * PB * SC;
 
-		for (int j = 0; j < blocks[i].size(); j++) {
+		for (int j = 0; j < 4; j++) {
 
-			blocks[i][j].x = CX + (CS - w) / 2 + int(PB * SC) * (pieces[nexts[i + 1]][j] % 4);
-			blocks[i][j].y = CY + CS * i + (CS - h) / 2 + int(PB * SC) * (pieces[nexts[i + 1]][j] / 4);
+			// Set the position of the block in the preview panel
+			tetrominos[i][j].x = PX + (PS - w) / 2 + int(PB * SC) * (t::tetrominos[next[i + 1]][j] % 4);
+			tetrominos[i][j].y = PY + (PS - h) / 2 + int(PB * SC) * (t::tetrominos[next[i + 1]][j] / 4) + PS * i;
 		}
 	}
 }
@@ -37,13 +39,13 @@ void Preview::draw() {
 	
 	Tetris::blocks.setScale(Vector2f(SC, SC));
 
-	for (int i = 0; i < blocks.size(); i++) {
+	for (int i = 0; i < tetrominos.size(); i++) {
 
-		Tetris::blocks.setTextureRect(IntRect(nexts[i + 1] * PB, 0, PB, PB));
+		Tetris::blocks.setTextureRect(IntRect(next[i + 1] * PB, 0, PB, PB));
 
-		for (auto& b : blocks[i]) {
+		for (auto& block : tetrominos[i]) {
 
-			Tetris::blocks.setPosition(Vector2f(float(b.x), float(b.y)));
+			Tetris::blocks.setPosition(Vector2f(block.x, block.y));
 			Tetris::window->draw(Tetris::blocks);
 		}
 	}
@@ -53,51 +55,15 @@ void Preview::draw() {
 
 void Preview::generate() {
 
-	for (int i = 0; i < nexts.size() - 1; i++) {
+	for (int i = 0; i < next.size() - 1; i++) {
 
-		nexts[i] = nexts[i + 1];
+		next[i] = next[i + 1];
 	}
 
-	nexts[3] = generator.getNext();
+	next[next.size() - 1] = generator.getNext();
 }
 
 int Preview::get() {
 
-	return nexts[0];
-}
-
-int Preview::findWidth(int p) {
-
-	int width = 0;
-
-	for (int i = 0; i < 4; i++) {
-
-		if (pieces[p][i] % 4 > width) {
-
-			width = pieces[p][i] % 4;
-		}
-	}
-
-	if (p == 3) width++;
-
-	width = (width + 1) * int(PB * SC);
-
-	return width;
-}
-
-int Preview::findHeight(int p) {
-
-	int height = 0;
-
-	for (int i = 0; i < 4; i++) {
-
-		if (pieces[p][i] / 4 > height) {
-
-			height = pieces[p][i] / 4;
-		}
-	}
-
-	height = (height + 1) * int(PB * SC);
-
-	return height;
+	return next[0];
 }

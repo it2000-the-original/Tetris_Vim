@@ -6,11 +6,14 @@ class Controls {
 
 private:
 
+	sf::Time sTime; // Step time
+
 	const sf::Time dTime  = sf::seconds(0.03f);
 	const sf::Time rTime  = sf::seconds(0.08f);
 	const sf::Time lTime  = sf::seconds(0.08f);
 	const sf::Time prTime = sf::seconds(0.15f);
 	const sf::Time plTime = sf::seconds(0.15f);
+	const sf::Time pdTime = sf::seconds(0.80f);
 
 	// Clocks for various actions
 
@@ -20,15 +23,17 @@ private:
 	sf::Clock lclock;  // Move left
 	sf::Clock prclock; // Pre-move right
 	sf::Clock plclock; // Pre-move left
+	sf::Clock pdclock; // Pre-depose clock
 
 	bool rmoved  = false; // Is the first execution of the moveRight function?
 	bool lmoved  = false; // Is the first execution of the moveLeft function?
 	bool rotated = false; // Already rotated?
 	bool dropped = false; // Already dropped?
-	bool skClock = false; // Skip the sclock?
 	bool holdEnb = true;  // Is the hold function enabled?
+	bool locking = false; // Is the tetromino locked down?
 	
-	int moves = 0; // Number of moves
+	int lsteps = 0; // locking steps
+	int moves = 0;  // Number of moves
 
 	void moveRight();
 	void moveLeft();
@@ -40,7 +45,12 @@ private:
 	void _checkHorizontalMoves();
 	void _resetRightMove();
 	void _resetLeftMove();
-	void _checkLookDown();
+
+	void _checkDisableLocking();
+	void _checkLockingMoves();
+	void _checkLocking();
+
+	void _checkGameOver();
 
 	// Input checking functions
 
@@ -53,9 +63,11 @@ private:
 
 public:
 
+	void update();
+
 	void checkInputs();
-	bool isStepReady();
-	void enableHold();
-	void resetStep();
-	bool lookDown();
+	void setStepTime();
+	void checkSteps();
+	void lockDown();
+	void depose();
 };

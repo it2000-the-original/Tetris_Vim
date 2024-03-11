@@ -1,12 +1,13 @@
 ﻿#include <filesystem>
+
 #include "Tetris.hpp"
 #include "Config.h"
 
 const int FPS = 60;
 const std::string title = "Tetris Vim";
 
-void setWinExeDir();
-void setExeDir(char** argv);
+void setWinExeDir();         // Set the executable path as working path
+void setExeDir(char** argv); // The same thing but for a non-Win32 application
 
 #ifdef HIDE_CONSOLE
 

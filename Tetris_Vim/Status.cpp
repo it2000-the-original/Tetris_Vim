@@ -1,65 +1,29 @@
+#include <iostream>
+
 #include "Status.hpp"
 #include "Tetris.hpp"
 #include "Config.h"
-#include <iostream>
 
 using namespace sf;
 
 void Status::init() {
 
-	Font* font = new Font();
-
-	if (!font->loadFromFile(FPath)) {
-
-		return;
-	}
-
-	#ifdef SMOTH_TEXT
-	// This doesn't work on Linux
-	font->setSmooth(false);
-	#endif
-
-	scoreText.setFont(*font);
-	levelText.setFont(*font);
-	linesText.setFont(*font);
-	numScoreText.setFont(*font);
-	numLevelText.setFont(*font);
-	numLinesText.setFont(*font);
+	_setFont();
+	_setFontSize();
+	_setFontColor();
 
 	scoreText.setString("score");
 	levelText.setString("level");
 	linesText.setString("lines");
-
-	scoreText.setCharacterSize(S);
-	levelText.setCharacterSize(S);
-	linesText.setCharacterSize(S);
-	numScoreText.setCharacterSize(NS);
-	numLevelText.setCharacterSize(NS);
-	numLinesText.setCharacterSize(NS);
-
-	scoreText.setFillColor(Color::Yellow);
-	levelText.setFillColor(Color::Yellow);
-	linesText.setFillColor(Color::Yellow);
-	numScoreText.setFillColor(Color::Yellow);
-	numLevelText.setFillColor(Color::Yellow);
-	numLinesText.setFillColor(Color::Yellow);
-
-	scoreText.setPosition(Vector2f(float(CX + (CS - scoreText.getLocalBounds().width) / 2), float(CY + TPADDING)));
-	levelText.setPosition(Vector2f(float(CX + (CS - levelText.getLocalBounds().width) / 2), float(CY + CS + TPADDING)));
-	linesText.setPosition(Vector2f(float(CX + (CS - linesText.getLocalBounds().width) / 2), float(CY + CS * 2 + TPADDING)));
 }
 
 void Status::update() {
 
-	numScoreText.setString(std::to_string(score));
-	numLevelText.setString(std::to_string(level));
-	numLinesText.setString(std::to_string(lines));
+	scoreNumber.setString(std::to_string(score));
+	levelNumber.setString(std::to_string(level));
+	linesNumber.setString(std::to_string(lines));
 
-	numScoreText.setPosition(Vector2f(float(CX + (CS - numScoreText.getLocalBounds().width) / 2), float(CY + NPADDING)));
-	numLevelText.setPosition(Vector2f(float(CX + (CS - numLevelText.getLocalBounds().width) / 2), float(CY + CS + NPADDING)));
-	numLinesText.setPosition(Vector2f(float(CX + (CS - numLinesText.getLocalBounds().width) / 2), float(CY + CS * 2 + NPADDING)));
-
-	level = lines / LEVEL_LINES + 1;
+	_setPositions();
 }
 
 void Status::draw() {
@@ -67,9 +31,9 @@ void Status::draw() {
 	Tetris::window->draw(scoreText);
 	Tetris::window->draw(levelText);
 	Tetris::window->draw(linesText);
-	Tetris::window->draw(numScoreText);
-	Tetris::window->draw(numLevelText);
-	Tetris::window->draw(numLinesText);
+	Tetris::window->draw(scoreNumber);
+	Tetris::window->draw(levelNumber);
+	Tetris::window->draw(linesNumber);
 }
 
 void Status::reset() {
@@ -77,4 +41,45 @@ void Status::reset() {
 	score = 0;
 	level = 0;
 	lines = 0;
+}
+
+void Status::_setFont() {
+
+	scoreText.setFont(Tetris::font);
+	levelText.setFont(Tetris::font);
+	linesText.setFont(Tetris::font);
+	scoreNumber.setFont(Tetris::font);
+	levelNumber.setFont(Tetris::font);
+	linesNumber.setFont(Tetris::font);
+}
+
+void Status::_setFontSize() {
+
+	scoreText.setCharacterSize(TS);
+	levelText.setCharacterSize(TS);
+	linesText.setCharacterSize(TS);
+	scoreNumber.setCharacterSize(NS);
+	levelNumber.setCharacterSize(NS);
+	linesNumber.setCharacterSize(NS);
+}
+
+void Status::_setFontColor() {
+
+	scoreText.setFillColor(Color::Yellow);
+	levelText.setFillColor(Color::Yellow);
+	linesText.setFillColor(Color::Yellow);
+	scoreNumber.setFillColor(Color::Yellow);
+	levelNumber.setFillColor(Color::Yellow);
+	linesNumber.setFillColor(Color::Yellow);
+}
+
+void Status::_setPositions() {
+
+	scoreText.setPosition(Vector2f(float(PX + (PS - scoreText.getLocalBounds().width) / 2), float(PY + TPADDING)));
+	levelText.setPosition(Vector2f(float(PX + (PS - levelText.getLocalBounds().width) / 2), float(PY + TPADDING + PS)));
+	linesText.setPosition(Vector2f(float(PX + (PS - linesText.getLocalBounds().width) / 2), float(PY + TPADDING + PS * 2)));
+
+	scoreNumber.setPosition(Vector2f(float(PX + (PS - scoreNumber.getLocalBounds().width) / 2), float(PY + NPADDING)));
+	levelNumber.setPosition(Vector2f(float(PX + (PS - levelNumber.getLocalBounds().width) / 2), float(PY + NPADDING + PS)));
+	linesNumber.setPosition(Vector2f(float(PX + (PS - linesNumber.getLocalBounds().width) / 2), float(PY + NPADDING + PS * 2)));
 }

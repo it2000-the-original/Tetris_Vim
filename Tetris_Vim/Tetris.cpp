@@ -1,10 +1,11 @@
+#include "Tetromino.hpp"
+#include "Controls.hpp"
+#include "Preview.hpp"
+#include "Sounds.hpp"
 #include "Tetris.hpp"
 #include "Matrix.hpp"
 #include "Status.hpp"
 #include "Ghost.hpp"
-#include "Piece.hpp"
-#include "Preview.hpp"
-#include "Controls.hpp"
 #include "Hold.hpp"
 
 using namespace sf;
@@ -12,15 +13,15 @@ using namespace sf;
 RenderWindow* Tetris::window;
 Sprite Tetris::blocks;
 Event Tetris::event;
-Time Tetris::sTime;
 Font Tetris::font;
 
+Tetromino Tetris::tetromino;
 Controls Tetris::controls;
 Preview Tetris::preview;
+Sounds Tetris::sounds;
 Status Tetris::status;
 Matrix Tetris::matrix;
 Ghost Tetris::ghost;
-Piece Tetris::piece;
 Hold Tetris::hold;
 
 Tetris::Tetris() {}
@@ -39,30 +40,23 @@ void Tetris::init(const int FPS, std::string title) {
 	matrix.init();
 	status.init();
 	preview.init();
+	sounds.init();
 	hold.init();
 
-	piece.set(preview.get());
+	tetromino.set(preview.get());
+	controls.setStepTime();
+	sounds.playMusic();
 
 	std::cout << "Window has been created" << std::endl;
 }
 
 void Tetris::update() {
 
-	// Setting the step time using the official formula
-	sTime = seconds(pow(0.8f - ((Tetris::status.level - 1) * 0.007f), Tetris::status.level - 1));
-
-	if (controls.isStepReady()) {
-
-		controls.resetStep();
-		step();
-	}
-
+	controls.update();
 	ghost.update();
 	preview.update();
 	status.update();
 	hold.update();
-
-	controls.checkInputs();
 }
 
 void Tetris::echeck() {
@@ -89,7 +83,7 @@ void Tetris::render() {
 
 	matrix.draw();
 	ghost.draw();
-	piece.draw();
+	tetromino.draw();
 	preview.draw();
 	status.draw();
 	hold.draw();
@@ -97,34 +91,13 @@ void Tetris::render() {
 	window->display();
 }
 
-void Tetris::step() {
-
-	if (!piece.move(0, 1)) {
-
-		if (piece.depose()) {
-
-			matrix.check();
-			preview.generate();
-			controls.enableHold();
-			piece.set(preview.get());
-		}
-
-		else reset(); // Game Over
-	}
-}
-
 void Tetris::checkWindowSize(int _w, int _h) {
 
 	int w = 0;
 	int h = 0;
 
-	if (_w >= MWW) w = _w;
-
-	else w = MWW;
-
-	if (_h >= MWH) h = _h;
-
-	else h = MWH;
+	if (_w >= MWW) w = _w; else w = MWW;
+	if (_h >= MWH) h = _h; else h = MWH;
 
 	window->setSize(Vector2u(w, h));
 
@@ -201,6 +174,5 @@ void Tetris::reset() {
 	matrix.init();
 	preview.init();
 	status.reset();
-	controls.resetStep();
-	piece.set(preview.get());
+	tetromino.set(preview.get());
 }

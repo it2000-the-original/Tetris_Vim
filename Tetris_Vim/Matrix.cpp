@@ -1,16 +1,18 @@
-#include "Piece.hpp"
+#include "Tetromino.hpp"
+#include "Sounds.hpp"
 #include "Matrix.hpp"
 #include "Tetris.hpp"
 #include "Status.hpp"
 
 using namespace sf;
+using namespace std;
 
 void Matrix::init() {
 
 	comboCount = -1;
 
 	for (auto& column : matrix)
-	for (auto& box : column) {
+	for (auto& box    : column) {
 
 		box = -1;
 	}
@@ -21,7 +23,7 @@ void Matrix::draw() {
 	for (int i = 0; i < W; i++)
 	for (int j = 0; j < H; j++) {
 
-		if (matrix[i][j] != -1) {
+		if (!empty(Block(i, j))) {
 
 			Tetris::blocks.setTextureRect(IntRect(matrix[i][j] * PB, 0, PB, PB));
 
@@ -35,65 +37,80 @@ void Matrix::draw() {
 	}
 }
 
-void Matrix::check() {
+void Matrix::checkLines() {
 
 	int removedLines = 0;
 
-	for (int i = 0; i < H; i++) {
+	for (int i = 0; i < H; i++) if (_isLineFull(i)) {
 
-		bool full = true;
-
-		for (int j = 0; j < W; j++) {
-
-			if (matrix[j][i] == -1) {
-
-				full = false;
-				break;
-			}
-		}
-
-		if (full) {
-			removedLines++;
-			del(i);
-			i--;
-		}
+		removedLines++;
+		remove(i);
+		i--;
 	}
 
-	checkLinesScore(removedLines);
-	checkComboScore(removedLines);
-	checkTSpinScore(removedLines);
+	_checkLinesScore(removedLines);
+	_checkComboScore(removedLines);
+	_checkTSpinScore(removedLines);
+	_playLinesSounds(removedLines);
 }
 
-void Matrix::del(int l) {
+void Matrix::remove(int l) {
 
-	for (int i = 0; i < W; i++) matrix[i][l] = -1;
+	for (int i = 0; i < W; i++) {
+		
+		matrix[i][l] = -1;
+	}
 
 	for (int i = 0; i < W; i++)
-	for (int j = l - 1; j >= 0; j--) {
 
+	for (int j = l - 1; j >= 0; j--) {
+	
 		matrix[i][j + 1] = matrix[i][j];
 	}
 
 	Tetris::status.lines++;
 }
 
-bool Matrix::empty(int x, int y) {
+int Matrix::get(Block block) {
 
-	if (x >= 0 and x < W and y < H) {
+	if (block.x < 0 or block.x >= W or block.y >= H) {
 
-		if (y >= 0) {
+		return 0;
+	}
 
-			if (matrix[x][y] == -1)
-				return true;
-		}
+	if (block.y < 0) return -1;
 
-		else return true;
+	return matrix[block.x][block.y];
+}
+
+bool Matrix::empty(Block block) {
+
+	return get(block) == -1;
+}
+
+bool Matrix::exist(Block block) {
+
+	if (block.x >= 0 and block.x < W and 
+		block.y >= 0 and block.y < H) {
+
+		return true;
 	}
 
 	return false;
 }
 
-void Matrix::checkLinesScore(int rLines) {
+bool Matrix::set(Block block, int value) {
+
+	if (!exist(block)) {
+
+		return false;
+	}
+
+	matrix[block.x][block.y] = value;
+	return true;
+}
+
+void Matrix::_checkLinesScore(int rLines) {
 
 	switch (rLines) {
 	case 1: Tetris::status.score += SINGLE * Tetris::status.level; break;
@@ -103,7 +120,7 @@ void Matrix::checkLinesScore(int rLines) {
 	}
 }
 
-void Matrix::checkComboScore(int rLines) {
+void Matrix::_checkComboScore(int rLines) {
 
 	if (rLines > 0) {
 
@@ -114,28 +131,72 @@ void Matrix::checkComboScore(int rLines) {
 	else comboCount = -1;
 }
 
-void Matrix::checkTSpinScore(int rLines) {
+void Matrix::_checkTSpinScore(int rLines) {
 
 	int score = 0;
 
-	if (Tetris::piece.checkTSpin()) {
+	if (Tetris::tetromino.checkTSpin()) {
 
-		switch (rLines) {
-		case 0: score = T_SPIN  * Tetris::status.level; break;
-		case 1: score = TSINGLE * Tetris::status.level; break;
-		case 2: score = TDOUBLE * Tetris::status.level; break;
-		case 3: score = TTRIPLE * Tetris::status.level; break;
-		}
+		score = _checkNormalTSpin(rLines);
 	}
 
-	else if (Tetris::piece.checkMiniTSpin()) {
+	else if (Tetris::tetromino.checkMiniTSpin()) {
 
-		switch (rLines) {
-		case 0: score = MT_SPIN  * Tetris::status.level; break;
-		case 1: score = MTSINGLE * Tetris::status.level; break;
-		case 2: score = MTDOUBLE * Tetris::status.level; break;
-		}
+		score = _checkMiniTSpin(rLines);
 	}
 
 	Tetris::status.score += score;
+}
+
+void Matrix::_playLinesSounds(int rLines) {
+
+	if (rLines == 4) {
+
+		Tetris::sounds.playTetrisSound();
+	}
+
+	else if (rLines > 0) {
+
+		Tetris::sounds.playRemovedLineSound();
+	}
+}
+
+bool Matrix::_isLineFull(int line) {
+
+	for (int i = 0; i < W; i++) {
+
+		if (matrix[i][line] == -1) {
+
+			return false;
+		}
+	}
+
+	return true;
+}
+
+int Matrix::_checkNormalTSpin(int rLines) {
+
+	int score = 0;
+
+	switch (rLines) {
+	case 0: score = T_SPIN  * Tetris::status.level; break;
+	case 1: score = TSINGLE * Tetris::status.level; break;
+	case 2: score = TDOUBLE * Tetris::status.level; break;
+	case 3: score = TTRIPLE * Tetris::status.level; break;
+	}
+
+	return score;
+}
+
+int Matrix::_checkMiniTSpin(int rLines) {
+
+	int score = 0;
+
+	switch (rLines) {
+	case 0: score = MT_SPIN  * Tetris::status.level; break;
+	case 1: score = MTSINGLE * Tetris::status.level; break;
+	case 2: score = MTDOUBLE * Tetris::status.level; break;
+	}
+
+	return score;
 }

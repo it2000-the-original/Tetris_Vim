@@ -1,11 +1,20 @@
+#include "Tetromino.hpp"
 #include "Controls.hpp"
 #include "Preview.hpp"
+#include "Matrix.hpp"
+#include "Sounds.hpp"
 #include "Status.hpp"
 #include "Tetris.hpp"
-#include "Piece.hpp"
 #include "Hold.hpp"
 
 using namespace sf;
+
+void Controls::update() {
+
+	checkInputs();
+	checkSteps();
+	lockDown();
+}
 
 void Controls::checkInputs() {
 
@@ -22,43 +31,66 @@ void Controls::checkInputs() {
 	if (_checkHoldInputs()) hold();
 }
 
-bool Controls::isStepReady() {
+void Controls::setStepTime() {
 
-	return sclock.getElapsedTime() > Tetris::sTime or skClock;
-}
+	// Setting the step time using the official formula
 
-void Controls::enableHold() {
-
-	holdEnb = true;
-}
-
-void Controls::resetStep() {
+	sTime = seconds(pow(0.8f - ((Tetris::status.level - 1) * 0.007f), Tetris::status.level - 1));
 
 	sclock.restart();
-	skClock = false;
 }
 
-bool Controls::lookDown() {
+void Controls::checkSteps() {
 
-	if (Tetris::piece.getPiece() == 0) {
+	if (sclock.getElapsedTime() > sTime) {
+		
+		Tetris::tetromino.move(0, 1);
 
-		return Tetris::piece.check(0, 3);
+		_checkDisableLocking();
+
+		setStepTime();
+	}
+}
+
+void Controls::lockDown() {
+
+	if (locking) {
+
+		if (pdclock.getElapsedTime() > pdTime) {
+
+			if (!Tetris::tetromino.check(0, 1)) {
+
+				Tetris::sounds.playSoftDropSound();
+				depose();
+			}
+		}
 	}
 
-	else {
+	_checkLocking();
+}
 
-		return Tetris::piece.check(0, 2);
-	}
+void Controls::depose() {
+
+	Tetris::tetromino.depose();
+	Tetris::matrix.checkLines();
+	Tetris::preview.generate();
+	Tetris::tetromino.set(Tetris::preview.get());
+
+	_checkGameOver();
+
+	holdEnb = true;
+	locking = false;
 }
 
 void Controls::moveRight() {
 	
 	if (rclock.getElapsedTime() > rTime or !rmoved) {
 
-		Tetris::piece.move(1, 0);
-		rclock.restart();
-		_checkLookDown();
-		rmoved = true;
+		if (Tetris::tetromino.move(1, 0)) {
+			rclock.restart();
+			rmoved = true;
+			_checkLockingMoves();
+		}
 	}
 
 	if (prclock.getElapsedTime() <= prTime) {
@@ -71,10 +103,11 @@ void Controls::moveLeft() {
 	
 	if (lclock.getElapsedTime() > lTime or !lmoved) {
 
-		Tetris::piece.move(-1, 0);
-		lclock.restart();
-		_checkLookDown();
-		lmoved = true;
+		if (Tetris::tetromino.move(-1, 0)) {
+			lclock.restart();
+			lmoved = true;
+			_checkLockingMoves();
+		}
 	}
 
 	if (plclock.getElapsedTime() <= plTime) {
@@ -87,7 +120,7 @@ void Controls::moveDown() {
 
 	if (dclock.getElapsedTime() > dTime) {
 
-		if (Tetris::piece.move(0, 1)) {
+		if (Tetris::tetromino.move(0, 1)) {
 			Tetris::status.score++;
 			dclock.restart();
 			sclock.restart();
@@ -99,21 +132,27 @@ void Controls::rotate() {
 
 	if (!rotated) {
 
-		if (Tetris::piece.rotate()) {
+		if (Tetris::tetromino.rotate()) {
 
 			rotated = true;
-			_checkLookDown();
+			_checkLockingMoves();
 		}
 	}
 }
 
 void Controls::drop() {
 
-	if (!dropped) {
+	if (!dropped) while (true) {
 
-		Tetris::status.score += Tetris::piece.fall() * 2;
-		dropped = true;
-		skClock = true;
+		if (!Tetris::tetromino.move(0, 1)) {
+
+			Tetris::sounds.playHardDropSound();
+			dropped = true;
+			depose();
+			break;
+		}
+
+		Tetris::status.score += 2;
 	}
 }
 
@@ -121,16 +160,16 @@ void Controls::hold() {
 
 	if (holdEnb) {
 
-		int tetromino = Tetris::piece.getPiece();
+		int tetromino = Tetris::tetromino.get();
 
 		if (Tetris::hold.get() != -1) {
 
-			Tetris::piece.set(Tetris::hold.get());
+			Tetris::tetromino.set(Tetris::hold.get());
 		}
 
 		else {
 			Tetris::preview.generate();
-			Tetris::piece.set(Tetris::preview.get());
+			Tetris::tetromino.set(Tetris::preview.get());
 		}
 
 		Tetris::hold.set(tetromino);
@@ -152,6 +191,26 @@ void Controls::_checkHorizontalMoves() {
 	}
 }
 
+void Controls::_checkDisableLocking() {
+
+	if (locking) {
+
+		lsteps++;
+
+		if (!Tetris::tetromino.check(0, 1)) lsteps = 0;
+
+		if ((Tetris::tetromino.get() != 0 and lsteps >= 2) or
+			(Tetris::tetromino.get() == 0 and lsteps >= 3)) {
+
+			if (Tetris::tetromino.check(0, 1)) {
+
+				locking = false;
+				lsteps = 0;
+			}
+		}
+	}
+}
+
 void Controls::_resetRightMove() {
 
 	prclock.restart();
@@ -164,18 +223,40 @@ void Controls::_resetLeftMove() {
 	lmoved = false;
 }
 
-void Controls::_checkLookDown() {
+void Controls::_checkLockingMoves() {
 
-	if (!lookDown()) {
+	if (locking and moves < 15) {
 
-		if (moves < MOVES) {
-			sclock.restart();
-			moves++;
-			return;
+		pdclock.restart();
+		sclock.restart();
+		moves++;
+	}
+}
+
+void Controls::_checkLocking() {
+
+	if (!Tetris::tetromino.check(0, 1) and !locking) {
+
+		moves = 0;
+		locking = true;
+		pdclock.restart();
+	}
+}
+
+void Controls::_checkGameOver() {
+
+	if (!Tetris::tetromino.check(0, 0)) {
+
+		Tetris::tetromino.move(0, -1);
+
+		if (!Tetris::tetromino.check(0, 0)) {
+
+			Tetris::tetromino.depose();
+			Tetris::sounds.playSoftDropSound();
+			Tetris::sounds.playGameOverSound();
+			Tetris::reset();
 		}
 	}
-
-	else moves = 0;
 }
 
 bool Controls::_checkSpaceInputs() {

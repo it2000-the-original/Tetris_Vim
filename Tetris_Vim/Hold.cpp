@@ -1,6 +1,6 @@
-#include "Piece.hpp"
-#include "Hold.hpp"
+#include "Tetromino.hpp"
 #include "Tetris.hpp"
+#include "Hold.hpp"
 
 using namespace sf;
 
@@ -22,13 +22,13 @@ void Hold::update() {
 	
 	if (tetromino != -1) {
 
-		int w = Piece::getWidth(tetromino) * PB * SC;
-		int h = Piece::getHeight(tetromino) * PB * SC;
+		int w = Tetromino::getWidth(tetromino) * PB * SC;
+		int h = Tetromino::getHeight(tetromino) * PB * SC;
 
 		for (int i = 0; i < blocks.size(); i++) {
 
-			blocks[i].x = PX + (PW - w) / 2 + pieces[tetromino][i] % 4 * PB * SC;
-			blocks[i].y = PY + (PW - h) / 2 + pieces[tetromino][i] / 4 * PB * SC + TH;
+			blocks[i].x = PX + (PW - w) / 2 + t::tetrominos[tetromino][i] % 4 * PB * SC;
+			blocks[i].y = PY + (PW - h) / 2 + t::tetrominos[tetromino][i] / 4 * PB * SC + TH;
 		}
 	}
 }

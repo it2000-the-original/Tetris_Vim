@@ -4,7 +4,7 @@
 void Generator::generate() {
 
 	tetrominoes.clear();
-	std::vector<int> _bag = bag;
+	Bag _bag = bag;
 
 	for (int i = 0; i < 7; i++) {
 

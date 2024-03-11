@@ -6,9 +6,21 @@ if (WIN32)
 	set(RESOURCE "../Resource.rc")
 endif(WIN32)
 
-add_executable(tvim ${RESOURCE} "Main.cpp" "Tetris.cpp" "Matrix.cpp" "Piece.cpp" "Preview.cpp" "Ghost.cpp" "Status.cpp" "Generator.cpp" "Controls.cpp" "Hold.cpp")
+add_executable(tvim ${RESOURCE} 
+	"Main.cpp"
+	"Hold.cpp" 
+	"Ghost.cpp" 
+	"Status.cpp" 
+	"Tetris.cpp"
+	"Sounds.cpp"
+	"Matrix.cpp"
+	"Preview.cpp" 
+	"Controls.cpp" 
+	"Generator.cpp" 
+	"Tetromino.cpp" 
+)
 
-target_link_libraries(tvim PRIVATE "sfml-system" "sfml-graphics" "sfml-window")
+target_link_libraries(tvim PRIVATE "sfml-system" "sfml-graphics" "sfml-window" "sfml-audio")
 
 target_include_directories(tvim PRIVATE "include" "${PROJECT_BINARY_DIR}")
 
