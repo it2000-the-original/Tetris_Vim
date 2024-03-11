@@ -171,6 +171,7 @@ bool Tetris::isRunning() {
 
 void Tetris::reset() {
 
+	hold.init();
 	matrix.init();
 	preview.init();
 	status.reset();
