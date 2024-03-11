@@ -23,6 +23,8 @@ void Status::update() {
 	levelNumber.setString(std::to_string(level));
 	linesNumber.setString(std::to_string(lines));
 
+	if (level_count >= 10) setLevel(level + 1);
+
 	_setPositions();
 }
 
@@ -41,6 +43,12 @@ void Status::reset() {
 	score = 0;
 	level = 0;
 	lines = 0;
+}
+
+void Status::setLevel(int _level) {
+
+	level = _level;
+	level_count = 0;
 }
 
 void Status::_setFont() {

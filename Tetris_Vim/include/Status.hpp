@@ -25,14 +25,14 @@ private:
 	sf::Text levelNumber;
 	sf::Text linesNumber;
 
-	// For all texts
-
 	void _setFont();
 	void _setFontSize();
 	void _setFontColor();
 	void _setPositions();
 
 public:
+
+	int level_count = 0;
 
 	int score = 0;
 	int level = 1;
@@ -42,4 +42,6 @@ public:
 	void update();
 	void draw();
 	void reset();
+
+	void setLevel(int _level);
 };

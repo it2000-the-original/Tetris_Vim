@@ -69,6 +69,7 @@ void Matrix::remove(int l) {
 	}
 
 	Tetris::status.lines++;
+	Tetris::status.level_count++;
 }
 
 int Matrix::get(Block block) {
