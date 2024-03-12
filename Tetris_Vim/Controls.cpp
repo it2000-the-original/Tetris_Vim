@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "Tetromino.hpp"
 #include "Controls.hpp"
 #include "Preview.hpp"
@@ -35,7 +37,7 @@ void Controls::setStepTime() {
 
 	// Setting the step time using the official formula
 
-	sTime = seconds(pow(0.8f - ((Tetris::status.level - 1) * 0.007f), Tetris::status.level - 1));
+	sTime = seconds(float(pow(0.8f - ((Tetris::status.level - 1) * 0.007f), Tetris::status.level - 1)));
 
 	sclock.restart();
 }

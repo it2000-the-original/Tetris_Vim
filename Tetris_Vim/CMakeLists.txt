@@ -3,7 +3,9 @@
 # Set the resource file if we are on Windows
 
 if (WIN32)
+
 	set(RESOURCE "../Resource.rc")
+
 endif(WIN32)
 
 add_executable(tvim ${RESOURCE} 
@@ -28,6 +30,7 @@ target_include_directories(tvim PRIVATE "include" "${PROJECT_BINARY_DIR}")
 # to remove the console during the execution
 
 if (WIN32 AND HIDE_CONSOLE)
+
 	set_target_properties(tvim PROPERTIES WIN32_EXECUTABLE TRUE)
 	target_compile_definitions(tvim PRIVATE "HIDE_CONSOLE")
 	message("-- Hide console enabled")
@@ -39,12 +42,18 @@ endif(WIN32 AND HIDE_CONSOLE)
 # for this reason I need to filter this function
 
 if (WIN32)
+
 	target_compile_definitions(tvim PRIVATE "SMOTH_TEXT")
-	message("-- Text Antialiasing enabled")
-else (WIN32)
 	message("-- Text Antialiasing disabled")
+
+else (WIN32)
+
+	message("-- Text Antialiasing enabled")
+
 endif(WIN32)
 
 if (CMAKE_VERSION VERSION_GREATER 3.21)
+
   set_property(TARGET tvim PROPERTY CXX_STANDARD 20)
+
 endif()

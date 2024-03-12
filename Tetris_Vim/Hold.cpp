@@ -22,13 +22,13 @@ void Hold::update() {
 	
 	if (tetromino != -1) {
 
-		int w = Tetromino::getWidth(tetromino) * PB * SC;
-		int h = Tetromino::getHeight(tetromino) * PB * SC;
+		int w = int(Tetromino::getWidth(tetromino) * PB * SC);
+		int h = int(Tetromino::getHeight(tetromino) * PB * SC);
 
 		for (int i = 0; i < blocks.size(); i++) {
 
-			blocks[i].x = PX + (PW - w) / 2 + t::tetrominos[tetromino][i] % 4 * PB * SC;
-			blocks[i].y = PY + (PW - h) / 2 + t::tetrominos[tetromino][i] / 4 * PB * SC + TH;
+			blocks[i].x = int(PX + (PW - w) / 2 + t::tetrominos[tetromino][i] % 4 * PB * SC);
+			blocks[i].y = int(PY + (PW - h) / 2 + t::tetrominos[tetromino][i] / 4 * PB * SC + TH);
 		}
 	}
 }
@@ -44,7 +44,7 @@ void Hold::draw() {
 
 		for (auto& block : blocks) {
 
-			Tetris::blocks.setPosition(Vector2f(block.x, block.y));
+			Tetris::blocks.setPosition(Vector2f(float(block.x), float(block.y)));
 			Tetris::window->draw(Tetris::blocks);
 		}
 

@@ -23,8 +23,8 @@ void Preview::update() {
 
 	for (int i = 0; i < tetrominos.size(); i++) {
 
-		int w = Tetromino::getWidth (next[i + 1]) * PB * SC;
-		int h = Tetromino::getHeight(next[i + 1]) * PB * SC;
+		int w = int(Tetromino::getWidth (next[i + 1]) * PB * SC);
+		int h = int(Tetromino::getHeight(next[i + 1]) * PB * SC);
 
 		for (int j = 0; j < 4; j++) {
 
@@ -45,7 +45,7 @@ void Preview::draw() {
 
 		for (auto& block : tetrominos[i]) {
 
-			Tetris::blocks.setPosition(Vector2f(block.x, block.y));
+			Tetris::blocks.setPosition(Vector2f(float(block.x), float(block.y)));
 			Tetris::window->draw(Tetris::blocks);
 		}
 	}
