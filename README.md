@@ -1,5 +1,5 @@
-# Tetris by it2000
-Tetris by it2000 (provvisional name) is a simple Tetris game thought to give to the player a good, classic, and playeble Tetris experience, without things or rubbish that could disturb the player in his experience, in fact this game is designed to be simple, and to be loved from the true Tetris fans. The game has been developed following the rules of the [Tetris Guideline](https://tetris.wiki/Tetris_Guideline), a list of features that every game of Tetris should have to be considered as such.
+# Tetris Vim
+Tetris Vim is a simple Tetris game thought to give to the player a good, classic, and playeble Tetris experience, without things or rubbish that could disturb the player in his experience, in fact this game is designed to be simple, and to be loved from the true Tetris fans. The game has been developed following the rules of the [Tetris Guideline](https://tetris.wiki/Tetris_Guideline), a list of features that every game of Tetris should have to be considered as such.
 ## Graphics
 From a my inspiration from the Tetris for Game Boy, this game has a monocromatic yellow graphics, without too many graphic effects which can disturb the player experience. As a response of my philosophy a game, to be liked, must be simple, minimal and dry, in fact I think that beauty is based only on its forms. This choise was also done to help color blind people like me.
 ## Tecnologies
@@ -17,7 +17,7 @@ And then build and run...
 ```
 cmake -B build -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
 cmake --build build
-cd build\Tetris_by_it2000
+cd build\Tetris_Vim
 Tetris
 ```
 ### Linux
@@ -26,8 +26,10 @@ Build and run...
 ```
 cmake -B build
 cmake --build build
-cd build/Tetris_by_it2000
+cd build/Tetris_Vim
 ./Tetris
 ```
 ## Where download?
 The game is avaiable on [itch.io](https://itch.io/) and here: https://it2000-the-original.itch.io/tetris-by-it2000 you can download the last version of the game and leave reviews. Have fun!!
+
+![Screenshot 2024-03-13 153418](https://github.com/it2000-the-original/Tetris_Vim/assets/93731405/c7f9ccf8-98f1-425b-b833-90096f12817a)
